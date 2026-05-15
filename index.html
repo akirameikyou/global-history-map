@@ -22,7 +22,7 @@ display:block;
 
 .title{
 position:absolute;
-top:40px;
+top:30px;
 width:100%;
 text-align:center;
 color:white;
@@ -68,4 +68,425 @@ background:rgba(255,255,255,0.4);
 }
 
 .year{
+opacity:0.8;
+}
+
+.label{
+position:absolute;
+color:white;
+font-size:12px;
+letter-spacing:2px;
+text-shadow:0 0 10px rgba(255,255,255,0.9);
+pointer-events:none;
+z-index:20;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="title">
+<h1>GLOBAL HISTORY MAP</h1>
+<p>HUMANITY THROUGH TIME</p>
+</div>
+
+<div class="timeline">
+
+<div class="year">3000 BC</div>
+<div class="line"></div>
+<div class="year">0</div>
+<div class="line"></div>
+<div class="year">1000</div>
+<div class="line"></div>
+<div class="year">1500</div>
+<div class="line"></div>
+<div class="year">2025</div>
+
+</div>
+
+<div id="tokyo" class="label">TOKYO</div>
+<div id="rome" class="label">ROME</div>
+<div id="cairo" class="label">CAIRO</div>
+<div id="beijing" class="label">BEIJING</div>
+
+<script type="module">
+
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js';
+
+
+
+// シーン
+
+const scene = new THREE.Scene();
+
+
+
+// カメラ
+
+const camera = new THREE.PerspectiveCamera(
+60,
+window.innerWidth/window.innerHeight,
+0.1,
+1000
+);
+
+camera.position.z = 5;
+
+
+
+// レンダラー
+
+const renderer = new THREE.WebGLRenderer({
+antialias:true
+});
+
+renderer.setSize(
+window.innerWidth,
+window.innerHeight
+);
+
+renderer.setPixelRatio(window.devicePixelRatio);
+
+document.body.appendChild(renderer.domElement);
+
+
+
+// 星空
+
+const starsGeometry = new THREE.BufferGeometry();
+
+const starVertices = [];
+
+for(let i=0;i<10000;i++){
+
+const x = (Math.random()-0.5)*2000;
+const y = (Math.random()-0.5)*2000;
+const z = (Math.random()-0.5)*2000;
+
+starVertices.push(x,y,z);
+
+}
+
+starsGeometry.setAttribute(
+'position',
+new THREE.Float32BufferAttribute(
+starVertices,
+3
+)
+);
+
+const starsMaterial = new THREE.PointsMaterial({
+color:0xffffff,
+size:0.7
+});
+
+const stars = new THREE.Points(
+starsGeometry,
+starsMaterial
+);
+
+scene.add(stars);
+
+
+
+// 地球テクスチャ
+
+const textureLoader = new THREE.TextureLoader();
+
+const earthTexture = textureLoader.load(
+'earth.jpg'
+);
+
+
+
+// 地球グループ
+
+const earthGroup = new THREE.Group();
+
+scene.add(earthGroup);
+
+
+
+// 地球
+
+const earthGeometry = new THREE.SphereGeometry(
+2,
+64,
+64
+);
+
+const earthMaterial = new THREE.MeshStandardMaterial({
+map:earthTexture,
+metalness:0.1,
+roughness:0.8
+});
+
+const earth = new THREE.Mesh(
+earthGeometry,
+earthMaterial
+);
+
+earthGroup.add(earth);
+
+
+
+// 発光
+
+const glowGeometry = new THREE.SphereGeometry(
+2.15,
+64,
+64
+);
+
+const glowMaterial = new THREE.MeshBasicMaterial({
+color:0x3399ff,
+transparent:true,
+opacity:0.18
+});
+
+const glow = new THREE.Mesh(
+glowGeometry,
+glowMaterial
+);
+
+earthGroup.add(glow);
+
+
+
+// 光
+
+const light = new THREE.PointLight(
+0xffffff,
+8
+);
+
+light.position.set(5,3,5);
+
+scene.add(light);
+
+const ambientLight = new THREE.AmbientLight(
+0xffffff,
+2
+);
+
+scene.add(ambientLight);
+
+
+
+// 文明ノード
+
+function createNode(lat,lon,color){
+
+const nodeGeometry =
+new THREE.SphereGeometry(0.04,16,16);
+
+const nodeMaterial =
+new THREE.MeshBasicMaterial({
+color:color
+});
+
+const node =
+new THREE.Mesh(
+nodeGeometry,
+nodeMaterial
+);
+
+const phi =
+(90-lat)*(Math.PI/180);
+
+const theta =
+(lon+180)*(Math.PI/180);
+
+const radius = 2.02;
+
+node.position.x =
+-(radius*Math.sin(phi)*Math.cos(theta));
+
+node.position.y =
+radius*Math.cos(phi);
+
+node.position.z =
+radius*Math.sin(phi)*Math.sin(theta);
+
+earthGroup.add(node);
+
+return node;
+
+}
+
+
+
+const tokyoNode =
+createNode(35.6762,139.6503,0x00ffff);
+
+const romeNode =
+createNode(41.9028,12.4964,0xffaa00);
+
+const cairoNode =
+createNode(30.0444,31.2357,0xff0000);
+
+const beijingNode =
+createNode(39.9042,116.4074,0x00ff66);
+
+
+
+// ラベル
+
+const tokyoLabel =
+document.getElementById('tokyo');
+
+const romeLabel =
+document.getElementById('rome');
+
+const cairoLabel =
+document.getElementById('cairo');
+
+const beijingLabel =
+document.getElementById('beijing');
+
+
+
+// ラベル位置更新
+
+function updateLabel(node,label){
+
+const vector = node.position.clone();
+
+vector.applyMatrix4(
+earthGroup.matrixWorld
+);
+
+vector.project(camera);
+
+const x =
+(vector.x * 0.5 + 0.5)
+* window.innerWidth;
+
+const y =
+(-vector.y * 0.5 + 0.5)
+* window.innerHeight;
+
+label.style.left = `${x}px`;
+
+label.style.top = `${y}px`;
+
+}
+
+
+
+// マウス回転
+
+let isDragging = false;
+
+let previousMousePosition = {
+x:0,
+y:0
+};
+
+renderer.domElement.addEventListener(
+'mousedown',
+()=>{
+isDragging = true;
+}
+);
+
+renderer.domElement.addEventListener(
+'mouseup',
+()=>{
+isDragging = false;
+}
+);
+
+renderer.domElement.addEventListener(
+'mousemove',
+(event)=>{
+
+if(isDragging){
+
+const deltaMove = {
+x:event.offsetX - previousMousePosition.x,
+y:event.offsetY - previousMousePosition.y
+};
+
+earthGroup.rotation.y +=
+deltaMove.x * 0.005;
+
+}
+
+previousMousePosition = {
+x:event.offsetX,
+y:event.offsetY
+};
+
+}
+);
+
+
+
+// アニメーション
+
+function animate(){
+
+requestAnimationFrame(animate);
+
+earthGroup.rotation.y += 0.0015;
+
+
+
+updateLabel(
+tokyoNode,
+tokyoLabel
+);
+
+updateLabel(
+romeNode,
+romeLabel
+);
+
+updateLabel(
+cairoNode,
+cairoLabel
+);
+
+updateLabel(
+beijingNode,
+beijingLabel
+);
+
+
+
+renderer.render(
+scene,
+camera
+);
+
+}
+
+animate();
+
+
+
+// リサイズ対応
+
+window.addEventListener(
+'resize',
+()=>{
+
+camera.aspect =
+window.innerWidth/window.innerHeight;
+
+camera.updateProjectionMatrix();
+
+renderer.setSize(
+window.innerWidth,
+window.innerHeight
+);
+
+}
+);
+
+</script>
+
+</body>
 </html>
