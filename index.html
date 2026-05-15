@@ -43,6 +43,7 @@ font-size:12px;
 letter-spacing:10px;
 color:#aaa;
 }
+
 .timeline{
 
 position:absolute;
@@ -55,12 +56,10 @@ align-items:center;
 gap:12px;
 
 color:white;
-
 z-index:10;
 
 font-size:12px;
 letter-spacing:3px;
-
 }
 
 .line{
@@ -69,14 +68,61 @@ width:80px;
 height:1px;
 
 background:rgba(255,255,255,0.4);
-
 }
 
 .year{
-
 opacity:0.8;
-
 }
+
+.labels{
+
+position:absolute;
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+pointer-events:none;
+
+z-index:10;
+}
+
+.label{
+
+position:absolute;
+
+color:white;
+
+font-size:12px;
+
+letter-spacing:2px;
+
+text-shadow:0 0 10px rgba(255,255,255,0.8);
+
+opacity:0.9;
+}
+
+.tokyo{
+top:42%;
+left:73%;
+}
+
+.rome{
+top:37%;
+left:52%;
+}
+
+.cairo{
+top:42%;
+left:55%;
+}
+
+.beijing{
+top:38%;
+left:67%;
+}
+
 </style>
 </head>
 
@@ -86,6 +132,16 @@ opacity:0.8;
 <h1>GLOBAL HISTORY MAP</h1>
 <p>HUMANITY THROUGH TIME</p>
 </div>
+
+<div class="labels">
+
+<div class="label tokyo">TOKYO</div>
+<div class="label rome">ROME</div>
+<div class="label cairo">CAIRO</div>
+<div class="label beijing">BEIJING</div>
+
+</div>
+
 <div class="timeline">
 
 <div class="year">3000 BC</div>
@@ -99,9 +155,13 @@ opacity:0.8;
 <div class="year">2025</div>
 
 </div>
+
 <script type="module">
 
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js';
+
+import { OrbitControls }
+from 'https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/controls/OrbitControls.js';
 
 
 
@@ -115,7 +175,7 @@ const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(
 60,
-window.innerWidth / window.innerHeight,
+window.innerWidth/window.innerHeight,
 0.1,
 1000
 );
@@ -142,6 +202,19 @@ window.devicePixelRatio
 document.body.appendChild(
 renderer.domElement
 );
+
+
+
+// マウス操作
+
+const controls = new OrbitControls(
+camera,
+renderer.domElement
+);
+
+controls.enableDamping = true;
+
+controls.dampingFactor = 0.05;
 
 
 
@@ -236,6 +309,11 @@ glowMaterial
 );
 
 scene.add(glow);
+
+
+
+// 文明ノード
+
 function createNode(lat,lon,color){
 
 const nodeGeometry =
@@ -279,6 +357,7 @@ createNode(30.0444,31.2357,0xff0000);
 createNode(39.9042,116.4074,0x00ff66);
 
 
+
 // 光
 
 const light = new THREE.PointLight(
@@ -299,7 +378,7 @@ scene.add(ambientLight);
 
 
 
-// 回転アニメーション
+// アニメーション
 
 function animate(){
 
@@ -308,6 +387,8 @@ requestAnimationFrame(animate);
 earth.rotation.y += 0.0018;
 
 glow.rotation.y += 0.0018;
+
+controls.update();
 
 renderer.render(
 scene,
