@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>GLOBAL HISTORY MAP</title>
 
 <style>
@@ -22,12 +22,11 @@ display:block;
 
 .title{
 position:absolute;
-top:30px;
+top:40px;
 width:100%;
 text-align:center;
 color:white;
 z-index:10;
-pointer-events:none;
 }
 
 .title h1{
@@ -44,18 +43,6 @@ letter-spacing:10px;
 color:#aaa;
 }
 
-.info{
-position:absolute;
-bottom:30px;
-width:100%;
-text-align:center;
-color:#888;
-font-size:12px;
-letter-spacing:3px;
-z-index:10;
-pointer-events:none;
-}
-
 </style>
 </head>
 
@@ -66,22 +53,15 @@ pointer-events:none;
 <p>HUMANITY THROUGH TIME</p>
 </div>
 
-<div class="info">
-DRAG TO ROTATE • SCROLL TO ZOOM
-</div>
-
 <script type="module">
 
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js';
-
-import { OrbitControls }
-from 'https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(
 60,
-window.innerWidth/window.innerHeight,
+window.innerWidth / window.innerHeight,
 0.1,
 1000
 );
@@ -101,32 +81,30 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 document.body.appendChild(renderer.domElement);
 
-const controls = new OrbitControls(
-camera,
-renderer.domElement
-);
 
-controls.enableDamping = true;
+
+// 星空
 
 const starsGeometry = new THREE.BufferGeometry();
 
-const starsCount = 10000;
+const starVertices = [];
 
-const starsPositions = [];
-
-for(let i=0;i<starsCount;i++){
+for(let i=0;i<10000;i++){
 
 const x = (Math.random()-0.5)*2000;
 const y = (Math.random()-0.5)*2000;
 const z = (Math.random()-0.5)*2000;
 
-starsPositions.push(x,y,z);
+starVertices.push(x,y,z);
 
 }
 
 starsGeometry.setAttribute(
 'position',
-new THREE.Float32BufferAttribute(starsPositions,3)
+new THREE.Float32BufferAttribute(
+starVertices,
+3
+)
 );
 
 const starsMaterial = new THREE.PointsMaterial({
@@ -134,33 +112,39 @@ color:0xffffff,
 size:0.7
 });
 
-const starField = new THREE.Points(
+const stars = new THREE.Points(
 starsGeometry,
 starsMaterial
 );
 
-scene.add(starField);
+scene.add(stars);
 
 
 
-const geometry = new THREE.SphereGeometry(
+// 地球
+
+const earthGeometry = new THREE.SphereGeometry(
 2,
 64,
 64
 );
 
-const material = new THREE.MeshStandardMaterial({
+const earthMaterial = new THREE.MeshStandardMaterial({
 color:0x2266ff,
-metalness:0.3,
-roughness:0.6
+metalness:0.2,
+roughness:0.7
 });
 
 const earth = new THREE.Mesh(
-geometry,
-material
+earthGeometry,
+earthMaterial
 );
 
 scene.add(earth);
+
+
+
+// 発光
 
 const glowGeometry = new THREE.SphereGeometry(
 2.15,
@@ -171,7 +155,7 @@ const glowGeometry = new THREE.SphereGeometry(
 const glowMaterial = new THREE.MeshBasicMaterial({
 color:0x3399ff,
 transparent:true,
-opacity:0.15
+opacity:0.2
 });
 
 const glow = new THREE.Mesh(
@@ -181,14 +165,18 @@ glowMaterial
 
 scene.add(glow);
 
-const sunLight = new THREE.PointLight(
+
+
+// 光
+
+const light = new THREE.PointLight(
 0xffffff,
-7
+8
 );
 
-sunLight.position.set(5,3,5);
+light.position.set(5,3,5);
 
-scene.add(sunLight);
+scene.add(light);
 
 const ambientLight = new THREE.AmbientLight(
 0xffffff,
@@ -197,60 +185,30 @@ const ambientLight = new THREE.AmbientLight(
 
 scene.add(ambientLight);
 
-function createNode(lat,lon,color=0xffaa00){
 
-const nodeGeometry =
-new THREE.SphereGeometry(0.03,16,16);
 
-const nodeMaterial =
-new THREE.MeshBasicMaterial({
-color:color
-});
-
-const node =
-new THREE.Mesh(nodeGeometry,nodeMaterial);
-
-const phi =
-(90-lat)*(Math.PI/180);
-
-const theta =
-(lon+180)*(Math.PI/180);
-
-const radius = 2.02;
-
-node.position.x =
--(radius*Math.sin(phi)*Math.cos(theta));
-
-node.position.y =
-radius*Math.cos(phi);
-
-node.position.z =
-radius*Math.sin(phi)*Math.sin(theta);
-
-scene.add(node);
-
-}
-
-createNode(35.6762,139.6503,0x00ffff);
-createNode(41.9028,12.4964,0xffaa00);
-createNode(30.0444,31.2357,0xff0000);
-createNode(39.9042,116.4074,0x00ff66);
+// アニメーション
 
 function animate(){
 
 requestAnimationFrame(animate);
 
-earth.rotation.y += 0.0015;
+earth.rotation.y += 0.002;
 
-glow.rotation.y += 0.0015;
+glow.rotation.y += 0.002;
 
-controls.update();
-
-renderer.render(scene,camera);
+renderer.render(
+scene,
+camera
+);
 
 }
 
 animate();
+
+
+
+// リサイズ対応
 
 window.addEventListener('resize',()=>{
 
