@@ -1,77 +1,71 @@
 <!DOCTYPE html>
+<html lang="en">
 
-// ラベル位置更新
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-function updateLabels(){
+<title>GLOBAL HISTORY MAP</title>
 
-cityLabels.forEach((item)=>{
+<style>
 
-const position = item.node.getWorldPosition(
-new THREE.Vector3()
-);
-
-position.project(camera);
-
-const x = (position.x * 0.5 + 0.5)
-* window.innerWidth;
-
-const y = (-position.y * 0.5 + 0.5)
-* window.innerHeight;
-
-item.label.style.left = `${x}px`;
-item.label.style.top = `${y}px`;
-
-
-// 地球の裏側に行ったら非表示
-
-if(position.z > 1){
-item.label.style.display = 'none';
-}else{
-item.label.style.display = 'block';
+body{
+margin:0;
+overflow:hidden;
+background:black;
+font-family:Arial,sans-serif;
 }
 
-});
-
+canvas{
+display:block;
 }
 
-
-// アニメーション
-
-function animate(){
-
-requestAnimationFrame(animate);
-
-earthGroup.rotation.y += rotationSpeed;
-
-updateLabels();
-
-renderer.render(
-scene,
-camera
-);
-
+.title{
+position:absolute;
+top:40px;
+width:100%;
+text-align:center;
+color:white;
+z-index:10;
+pointer-events:none;
 }
 
-animate();
+.title h1{
+margin:0;
+font-size:42px;
+letter-spacing:6px;
+text-shadow:0 0 20px rgba(255,255,255,0.8);
+}
 
+.title p{
+margin-top:10px;
+font-size:12px;
+letter-spacing:10px;
+color:#aaa;
+}
 
-// リサイズ対応
+.timeline{
+position:absolute;
+bottom:40px;
+left:50%;
+transform:translateX(-50%);
 
-window.addEventListener('resize',()=>{
+display:flex;
+align-items:center;
+gap:12px;
 
-camera.aspect =
-window.innerWidth/window.innerHeight;
+color:white;
+z-index:10;
 
-camera.updateProjectionMatrix();
+font-size:12px;
+letter-spacing:3px;
+}
 
-renderer.setSize(
-window.innerWidth,
-window.innerHeight
-);
+.line{
+width:80px;
+height:1px;
+background:rgba(255,255,255,0.4);
+}
 
-});
-
-</script>
-
-</body>
+.year{
 </html>
