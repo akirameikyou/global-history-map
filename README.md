@@ -142,6 +142,9 @@ Production Support:
 
 ChatGPT
 
+![GLOBAL HISTORY MAP](images/title.jpg)
+
+[Watch Demo Video](demo.mp4)
 ---
 
 # License
