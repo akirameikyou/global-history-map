@@ -160,9 +160,6 @@ left:67%;
 
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js';
 
-import { OrbitControls }
-from 'https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/controls/OrbitControls.js';
-
 
 
 // シーン
@@ -202,19 +199,6 @@ window.devicePixelRatio
 document.body.appendChild(
 renderer.domElement
 );
-
-
-
-// マウス操作
-
-const controls = new OrbitControls(
-camera,
-renderer.domElement
-);
-
-controls.enableDamping = true;
-
-controls.dampingFactor = 0.05;
 
 
 
@@ -378,17 +362,71 @@ scene.add(ambientLight);
 
 
 
+// 自転速度
+
+let rotationSpeed = 0.0018;
+
+
+
+// マウス操作（安定版）
+
+let isDragging = false;
+
+let previousMousePosition = {
+x:0,
+y:0
+};
+
+renderer.domElement.addEventListener(
+'mousedown',
+()=>{
+isDragging = true;
+}
+);
+
+renderer.domElement.addEventListener(
+'mouseup',
+()=>{
+isDragging = false;
+}
+);
+
+renderer.domElement.addEventListener(
+'mousemove',
+(event)=>{
+
+if(isDragging){
+
+const deltaMove = {
+x:event.offsetX - previousMousePosition.x,
+y:event.offsetY - previousMousePosition.y
+};
+
+earth.rotation.y += deltaMove.x * 0.005;
+
+glow.rotation.y += deltaMove.x * 0.005;
+
+}
+
+previousMousePosition = {
+x:event.offsetX,
+y:event.offsetY
+};
+
+}
+);
+
+
+
 // アニメーション
 
 function animate(){
 
 requestAnimationFrame(animate);
 
-earth.rotation.y += 0.0018;
+earth.rotation.y += rotationSpeed;
 
-glow.rotation.y += 0.0018;
-
-controls.update();
+glow.rotation.y += rotationSpeed;
 
 renderer.render(
 scene,
