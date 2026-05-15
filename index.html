@@ -27,6 +27,7 @@ width:100%;
 text-align:center;
 color:white;
 z-index:10;
+pointer-events:none;
 }
 
 .title h1{
@@ -57,7 +58,15 @@ color:#aaa;
 
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js';
 
+
+
+// シーン
+
 const scene = new THREE.Scene();
+
+
+
+// カメラ
 
 const camera = new THREE.PerspectiveCamera(
 60,
@@ -68,6 +77,10 @@ window.innerWidth / window.innerHeight,
 
 camera.position.z = 5;
 
+
+
+// レンダラー
+
 const renderer = new THREE.WebGLRenderer({
 antialias:true
 });
@@ -77,9 +90,13 @@ window.innerWidth,
 window.innerHeight
 );
 
-renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setPixelRatio(
+window.devicePixelRatio
+);
 
-document.body.appendChild(renderer.domElement);
+document.body.appendChild(
+renderer.domElement
+);
 
 
 
@@ -89,7 +106,7 @@ const starsGeometry = new THREE.BufferGeometry();
 
 const starVertices = [];
 
-for(let i=0;i<10000;i++){
+for(let i=0;i<12000;i++){
 
 const x = (Math.random()-0.5)*2000;
 const y = (Math.random()-0.5)*2000;
@@ -121,6 +138,16 @@ scene.add(stars);
 
 
 
+// 地球テクスチャ
+
+const textureLoader = new THREE.TextureLoader();
+
+const earthTexture = textureLoader.load(
+'earth.jpg'
+);
+
+
+
 // 地球
 
 const earthGeometry = new THREE.SphereGeometry(
@@ -130,9 +157,9 @@ const earthGeometry = new THREE.SphereGeometry(
 );
 
 const earthMaterial = new THREE.MeshStandardMaterial({
-color:0x2266ff,
-metalness:0.2,
-roughness:0.7
+map:earthTexture,
+metalness:0.1,
+roughness:0.8
 });
 
 const earth = new THREE.Mesh(
@@ -155,7 +182,7 @@ const glowGeometry = new THREE.SphereGeometry(
 const glowMaterial = new THREE.MeshBasicMaterial({
 color:0x3399ff,
 transparent:true,
-opacity:0.2
+opacity:0.18
 });
 
 const glow = new THREE.Mesh(
@@ -187,15 +214,15 @@ scene.add(ambientLight);
 
 
 
-// アニメーション
+// 回転アニメーション
 
 function animate(){
 
 requestAnimationFrame(animate);
 
-earth.rotation.y += 0.002;
+earth.rotation.y += 0.0018;
 
-glow.rotation.y += 0.002;
+glow.rotation.y += 0.0018;
 
 renderer.render(
 scene,
