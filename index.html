@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GLOBAL HISTORY MAP</title>
+
+  <style>
+    body{
+      margin:0;
+      background:black;
+      color:white;
+      overflow:hidden;
+      font-family:Arial, sans-serif;
+    }
+
+    .container{
+      position:relative;
+      width:100vw;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      background:
+      radial-gradient(circle at center, rgba(0,120,255,0.25), transparent 50%),
+      black;
+    }
+
+    .earth{
+      width:320px;
+      height:320px;
+      border-radius:50%;
+      background:
+      radial-gradient(circle at 30% 30%, #3fa9ff, #001a33 70%);
+      box-shadow:0 0 80px rgba(0,150,255,0.6);
+      position:relative;
+      animation:rotate 20s linear infinite;
+    }
+
+    .earth::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 18px,
+        rgba(255,255,255,0.08) 20px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 18px,
+        rgba(255,255,255,0.08) 20px
+      );
+    }
+
+    h1{
+      margin-top:40px;
+      font-size:42px;
+      letter-spacing:4px;
+      text-shadow:0 0 20px rgba(255,255,255,0.8);
+    }
+
+    p{
+      color:#aaa;
+      letter-spacing:6px;
+    }
+
+    @keyframes rotate{
+      from{
+        transform:rotate(0deg);
+      }
+      to{
+        transform:rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="earth"></div>
+
+  <h1>GLOBAL HISTORY MAP</h1>
+
+  <p>Humanity Through Time</p>
+</div>
+
+</body>
+</html>
