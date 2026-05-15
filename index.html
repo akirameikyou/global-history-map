@@ -43,7 +43,40 @@ font-size:12px;
 letter-spacing:10px;
 color:#aaa;
 }
+.timeline{
 
+position:absolute;
+bottom:40px;
+left:50%;
+transform:translateX(-50%);
+
+display:flex;
+align-items:center;
+gap:12px;
+
+color:white;
+
+z-index:10;
+
+font-size:12px;
+letter-spacing:3px;
+
+}
+
+.line{
+
+width:80px;
+height:1px;
+
+background:rgba(255,255,255,0.4);
+
+}
+
+.year{
+
+opacity:0.8;
+
+}
 </style>
 </head>
 
@@ -53,7 +86,19 @@ color:#aaa;
 <h1>GLOBAL HISTORY MAP</h1>
 <p>HUMANITY THROUGH TIME</p>
 </div>
+<div class="timeline">
 
+<div class="year">3000 BC</div>
+<div class="line"></div>
+<div class="year">0</div>
+<div class="line"></div>
+<div class="year">1000</div>
+<div class="line"></div>
+<div class="year">1500</div>
+<div class="line"></div>
+<div class="year">2025</div>
+
+</div>
 <script type="module">
 
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js';
@@ -191,7 +236,47 @@ glowMaterial
 );
 
 scene.add(glow);
+function createNode(lat,lon,color){
 
+const nodeGeometry =
+new THREE.SphereGeometry(0.04,16,16);
+
+const nodeMaterial =
+new THREE.MeshBasicMaterial({
+color:color
+});
+
+const node =
+new THREE.Mesh(
+nodeGeometry,
+nodeMaterial
+);
+
+const phi =
+(90-lat)*(Math.PI/180);
+
+const theta =
+(lon+180)*(Math.PI/180);
+
+const radius = 2.02;
+
+node.position.x =
+-(radius*Math.sin(phi)*Math.cos(theta));
+
+node.position.y =
+radius*Math.cos(phi);
+
+node.position.z =
+radius*Math.sin(phi)*Math.sin(theta);
+
+scene.add(node);
+
+}
+
+createNode(35.6762,139.6503,0x00ffff);
+createNode(41.9028,12.4964,0xffaa00);
+createNode(30.0444,31.2357,0xff0000);
+createNode(39.9042,116.4074,0x00ff66);
 
 
 // 光
