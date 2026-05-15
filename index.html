@@ -1,95 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GLOBAL HISTORY MAP</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GLOBAL HISTORY MAP</title>
 
-  <style>
-    body{
-      margin:0;
-      background:black;
-      color:white;
-      overflow:hidden;
-      font-family:Arial, sans-serif;
-    }
+<style>
 
-    .container{
-      position:relative;
-      width:100vw;
-      height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      flex-direction:column;
-      background:
-      radial-gradient(circle at center, rgba(0,120,255,0.25), transparent 50%),
-      black;
-    }
+body{
+margin:0;
+overflow:hidden;
+background:black;
+font-family:Arial,sans-serif;
+}
 
-    .earth{
-      width:320px;
-      height:320px;
-      border-radius:50%;
-      background:
-      radial-gradient(circle at 30% 30%, #3fa9ff, #001a33 70%);
-      box-shadow:0 0 80px rgba(0,150,255,0.6);
-      position:relative;
-      animation:rotate 20s linear infinite;
-    }
+canvas{
+display:block;
+}
 
-    .earth::before{
-      content:'';
-      position:absolute;
-      inset:0;
-      border-radius:50%;
-      background:
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 18px,
-        rgba(255,255,255,0.08) 20px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 18px,
-        rgba(255,255,255,0.08) 20px
-      );
-    }
+.title{
+position:absolute;
+top:40px;
+width:100%;
+text-align:center;
+color:white;
+z-index:10;
+}
 
-    h1{
-      margin-top:40px;
-      font-size:42px;
-      letter-spacing:4px;
-      text-shadow:0 0 20px rgba(255,255,255,0.8);
-    }
+.title h1{
+font-size:42px;
+letter-spacing:6px;
+margin:0;
+text-shadow:0 0 20px rgba(255,255,255,0.8);
+}
 
-    p{
-      color:#aaa;
-      letter-spacing:6px;
-    }
+.title p{
+margin-top:10px;
+letter-spacing:10px;
+color:#aaa;
+font-size:12px;
+}
 
-    @keyframes rotate{
-      from{
-        transform:rotate(0deg);
-      }
-      to{
-        transform:rotate(360deg);
-      }
-    }
-  </style>
+</style>
 </head>
 
 <body>
 
-<div class="container">
-  <div class="earth"></div>
-
-  <h1>GLOBAL HISTORY MAP</h1>
-
-  <p>Humanity Through Time</p>
+<div class="title">
+<h1>GLOBAL HISTORY MAP</h1>
+<p>HUMANITY THROUGH TIME</p>
 </div>
+
+<script type="module">
+
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js';
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(
+75,
+window.innerWidth/window.innerHeight,
+0.1,
+1000
+);
+
+const renderer = new THREE.WebGLRenderer({
+antialias:true
+});
+
+renderer.setSize(window.innerWidth,window.innerHeight);
+
+document.body.appendChild(renderer.domElement);
+
+const geometry = new THREE.SphereGeometry(2,64,64);
+
+const textureLoader = new THREE.TextureLoader();
+
+const earthTexture = textureLoader.load(
+'https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg'
+);
+
+const material = new THREE.MeshStandardMaterial({
+map:earthTexture
+});
+
+const earth = new THREE.Mesh(
+geometry,
+material
+);
+
+scene.add(earth);
+
+const light = new THREE.PointLight(
+0xffffff,
+2
+);
+
+light.position.set(5,3,5);
+
+scene.add(light);
+
+const ambient = new THREE.AmbientLight(
+0x404040,
+2
+);
+
+scene.add(ambient);
+
+camera.position.z = 5;
+
+function animate(){
+
+requestAnimationFrame(animate);
+
+earth.rotation.y += 0.002;
+
+renderer.render(scene,camera);
+
+}
+
+animate();
+
+window.addEventListener('resize',()=>{
+
+camera.aspect =
+window.innerWidth/window.innerHeight;
+
+camera.updateProjectionMatrix();
+
+renderer.setSize(
+window.innerWidth,
+window.innerHeight
+);
+
+});
+
+</script>
 
 </body>
 </html>
