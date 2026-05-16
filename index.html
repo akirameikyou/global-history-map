@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>JOHN MANJIRO GLOBAL HISTORY MAP</title>
+<title>GLOBAL HISTORY MAP</title>
 
 <style>
 
@@ -17,11 +17,13 @@ font-family:Arial,sans-serif;
 color:white;
 }
 
+/* ===== 3D Canvas ===== */
+
 canvas{
 display:block;
 }
 
-/* ===== タイトル ===== */
+/* ===== Title ===== */
 
 .title{
 position:absolute;
@@ -34,19 +36,20 @@ pointer-events:none;
 
 .title h1{
 margin:0;
-font-size:42px;
-letter-spacing:6px;
-text-shadow:0 0 20px rgba(255,255,255,0.8);
+font-size:44px;
+letter-spacing:8px;
+text-shadow:0 0 25px rgba(255,255,255,0.85);
 }
 
 .title p{
-margin-top:10px;
-font-size:12px;
-letter-spacing:8px;
-color:#aaa;
+margin-top:12px;
+font-size:13px;
+letter-spacing:10px;
+color:#9fdcff;
+text-shadow:0 0 10px rgba(0,180,255,0.7);
 }
 
-/* ===== タイムライン ===== */
+/* ===== Timeline ===== */
 
 .timeline{
 position:absolute;
@@ -68,52 +71,53 @@ background:rgba(255,255,255,0.4);
 }
 
 .year{
-opacity:0.8;
+opacity:0.85;
 }
 
-/* ===== ラベル ===== */
+/* ===== Labels ===== */
 
 .label{
 position:absolute;
 color:white;
 font-size:12px;
 letter-spacing:2px;
-text-shadow:0 0 10px rgba(255,255,255,0.9);
+text-shadow:0 0 12px rgba(255,255,255,0.9);
 pointer-events:none;
 z-index:20;
 transition:opacity 0.3s;
+white-space:nowrap;
 }
 
-/* ===== 情報パネル ===== */
+/* ===== Info Panel ===== */
 
 .panel{
 position:absolute;
 right:30px;
 top:110px;
 width:340px;
-background:rgba(0,0,0,0.75);
-border:1px solid rgba(255,255,255,0.2);
+background:rgba(0,0,0,0.72);
+border:1px solid rgba(255,255,255,0.15);
 padding:20px;
 z-index:30;
-backdrop-filter:blur(10px);
-box-shadow:0 0 25px rgba(0,150,255,0.25);
+backdrop-filter:blur(12px);
+box-shadow:0 0 30px rgba(0,150,255,0.2);
 }
 
 .panel img{
 width:100%;
-border-radius:8px;
+border-radius:10px;
 margin-bottom:15px;
 }
 
 .panel h2{
 margin-top:0;
-font-size:22px;
+font-size:24px;
 letter-spacing:2px;
 }
 
 .panel p{
 font-size:13px;
-line-height:1.8;
+line-height:1.9;
 color:#ccc;
 }
 
@@ -121,10 +125,54 @@ color:#ccc;
 color:#7fe7ff;
 }
 
+/* ===== Upload ===== */
+
 .upload{
 margin-top:15px;
 font-size:12px;
 color:#aaa;
+width:100%;
+}
+
+/* ===== Civilization Tags ===== */
+
+.tags{
+margin-top:20px;
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+}
+
+.tag{
+border:1px solid rgba(0,200,255,0.4);
+padding:6px 10px;
+font-size:11px;
+letter-spacing:1px;
+color:#7fe7ff;
+background:rgba(0,120,255,0.08);
+}
+
+/* ===== Corner Glow ===== */
+
+.corner{
+position:absolute;
+width:400px;
+height:400px;
+background:radial-gradient(circle,
+rgba(0,150,255,0.18),
+transparent 70%);
+pointer-events:none;
+z-index:1;
+}
+
+.corner.top{
+top:-200px;
+right:-100px;
+}
+
+.corner.bottom{
+bottom:-200px;
+left:-100px;
 }
 
 </style>
@@ -132,18 +180,24 @@ color:#aaa;
 
 <body>
 
-<!-- タイトル -->
+<div class="corner top"></div>
+<div class="corner bottom"></div>
+
+<!-- ===== Title ===== -->
 
 <div class="title">
-<h1>JOHN MANJIRO</h1>
-<p>GLOBAL HISTORY MAP</p>
+<h1>GLOBAL HISTORY MAP</h1>
+<p>JOHN MANJIRO</p>
 </div>
 
-<!-- 情報パネル -->
+<!-- ===== Info Panel ===== -->
 
 <div class="panel">
 
-<img id="manjiroImage" src="manjiro.jpg">
+<img
+id="portrait"
+src="john-manjiro-portrait.png"
+>
 
 <input
 type="file"
@@ -160,31 +214,43 @@ accept="image/*"
 Nakahama Manjiro
 </span>
 
-was a Japanese fisherman born in
-Tosashimizu during the late Edo period.
+was born in Tosashimizu during the late Edo period.
 
 After drifting across the Pacific Ocean,
-he was rescued by an American whaling ship.
-
-His life became a bridge between
-Japan and the modern world.
+he was rescued by an American whaling ship,
+studied English and navigation in America,
+and later returned to Japan during the
+dawn of modernization.
 
 </p>
 
 <p>
 
-• Ocean Drift<br>
-• Pacific Routes<br>
-• Whaling Culture<br>
-• Technology Transfer<br>
-• Global Trade<br>
-• Modernization of Japan
+His life connected:
+
+<br><br>
+
+• Japan and America<br>
+• Ocean currents and trade<br>
+• Isolation and globalization<br>
+• Tradition and modernization
 
 </p>
 
+<div class="tags">
+
+<div class="tag">PACIFIC</div>
+<div class="tag">WHALING</div>
+<div class="tag">GLOBALIZATION</div>
+<div class="tag">MODERNIZATION</div>
+<div class="tag">NAVIGATION</div>
+<div class="tag">CIVILIZATION</div>
+
 </div>
 
-<!-- タイムライン -->
+</div>
+
+<!-- ===== Timeline ===== -->
 
 <div class="timeline">
 
@@ -204,7 +270,7 @@ Japan and the modern world.
 
 </div>
 
-<!-- ラベル -->
+<!-- ===== Labels ===== -->
 
 <div id="tosashimizu" class="label">
 TOSASHIMIZU
@@ -232,12 +298,12 @@ import * as THREE from
 'https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js';
 
 
-// ===== シーン =====
+// ===== Scene =====
 
 const scene = new THREE.Scene();
 
 
-// ===== カメラ =====
+// ===== Camera =====
 
 const camera = new THREE.PerspectiveCamera(
 60,
@@ -249,7 +315,7 @@ window.innerWidth/window.innerHeight,
 camera.position.z = 5;
 
 
-// ===== レンダラー =====
+// ===== Renderer =====
 
 const renderer = new THREE.WebGLRenderer({
 antialias:true
@@ -269,18 +335,18 @@ renderer.domElement
 );
 
 
-// ===== 星空 =====
+// ===== Stars =====
 
 const starsGeometry =
 new THREE.BufferGeometry();
 
 const starVertices = [];
 
-for(let i=0;i<12000;i++){
+for(let i=0;i<15000;i++){
 
-const x = (Math.random()-0.5)*2000;
-const y = (Math.random()-0.5)*2000;
-const z = (Math.random()-0.5)*2000;
+const x = (Math.random()-0.5)*2500;
+const y = (Math.random()-0.5)*2500;
+const z = (Math.random()-0.5)*2500;
 
 starVertices.push(x,y,z);
 
@@ -309,7 +375,7 @@ starsMaterial
 scene.add(stars);
 
 
-// ===== 地球 =====
+// ===== Earth =====
 
 const textureLoader =
 new THREE.TextureLoader();
@@ -332,8 +398,8 @@ new THREE.SphereGeometry(
 const earthMaterial =
 new THREE.MeshStandardMaterial({
 map:earthTexture,
-metalness:0.1,
-roughness:0.8
+metalness:0.08,
+roughness:0.78
 });
 
 const earth =
@@ -345,7 +411,7 @@ earthMaterial
 earthGroup.add(earth);
 
 
-// ===== 発光 =====
+// ===== Glow =====
 
 const glowGeometry =
 new THREE.SphereGeometry(
@@ -356,7 +422,7 @@ new THREE.SphereGeometry(
 
 const glowMaterial =
 new THREE.MeshBasicMaterial({
-color:0x3399ff,
+color:0x33bbff,
 transparent:true,
 opacity:0.18
 });
@@ -370,7 +436,7 @@ glowMaterial
 earthGroup.add(glow);
 
 
-// ===== 光 =====
+// ===== Lights =====
 
 const light =
 new THREE.PointLight(
@@ -391,11 +457,37 @@ new THREE.AmbientLight(
 scene.add(ambientLight);
 
 
-// ===== ノード =====
+// ===== Nodes =====
 
+const labels = [];
 const routePoints = [];
 
-function createNode(lat,lon,color){
+function latLonToVector3(lat,lon,radius){
+
+const phi =
+(90-lat)*(Math.PI/180);
+
+const theta =
+(lon+180)*(Math.PI/180);
+
+const x =
+-(radius*Math.sin(phi)*Math.cos(theta));
+
+const y =
+radius*Math.cos(phi);
+
+const z =
+radius*Math.sin(phi)*Math.sin(theta);
+
+return new THREE.Vector3(x,y,z);
+
+}
+
+
+function createNode(name,lat,lon,color,labelId){
+
+const position =
+latLonToVector3(lat,lon,2.08);
 
 const geometry =
 new THREE.SphereGeometry(
@@ -415,82 +507,83 @@ geometry,
 material
 );
 
-const phi =
-(90-lat)*(Math.PI/180);
-
-const theta =
-(lon+180)*(Math.PI/180);
-
-const radius = 2.02;
-
-node.position.x =
--(radius*Math.sin(phi)*Math.cos(theta));
-
-node.position.y =
-radius*Math.cos(phi);
-
-node.position.z =
-radius*Math.sin(phi)*Math.sin(theta);
+node.position.copy(position);
 
 earthGroup.add(node);
 
-routePoints.push(node.position);
+routePoints.push(position);
+
+labels.push({
+node:node,
+label:document.getElementById(labelId)
+});
 
 return node;
 
 }
 
 
-// ===== 地点 =====
+// ===== Locations =====
 
-const tosashimizuNode =
 createNode(
+'TOSASHIMIZU',
 32.7800,
 132.9500,
-0x00ffff
+0x00ffff,
+'tosashimizu'
 );
 
-const torishimaNode =
 createNode(
+'TORISHIMA',
 30.4840,
 140.3030,
-0xffaa00
+0xffaa00,
+'torishima'
 );
 
-const hawaiiNode =
 createNode(
+'HAWAII',
 21.3069,
 -157.8583,
-0xff0000
+0xff4444,
+'hawaii'
 );
 
-const newbedfordNode =
 createNode(
+'NEW BEDFORD',
 41.6362,
 -70.9342,
-0x00ff66
+0x00ff88,
+'newbedford'
 );
 
-const sanfranciscoNode =
 createNode(
+'SAN FRANCISCO',
 37.7749,
 -122.4194,
-0xffff00
+0xffff00,
+'sanfrancisco'
 );
 
 
-// ===== 光ルート =====
+// ===== Curved Route =====
+
+const curve =
+new THREE.CatmullRomCurve3(routePoints);
+
+const curvePoints =
+curve.getPoints(300);
 
 const routeGeometry =
 new THREE.BufferGeometry().setFromPoints(
-routePoints
+curvePoints
 );
 
 const routeMaterial =
 new THREE.LineBasicMaterial({
-color:0x66ccff,
+color:0x00ffff,
 transparent:true,
-opacity:0.8
+opacity:1
 });
 
 const routeLine =
@@ -502,67 +595,47 @@ routeMaterial
 earthGroup.add(routeLine);
 
 
-// ===== ラベル =====
+// ===== Labels Update =====
 
-const labels = [
+function updateLabels(){
 
-{
-node:tosashimizuNode,
-label:document.getElementById('tosashimizu')
-},
+labels.forEach(item=>{
 
-{
-node:torishimaNode,
-label:document.getElementById('torishima')
-},
-
-{
-node:hawaiiNode,
-label:document.getElementById('hawaii')
-},
-
-{
-node:newbedfordNode,
-label:document.getElementById('newbedford')
-},
-
-{
-node:sanfranciscoNode,
-label:document.getElementById('sanfrancisco')
-}
-
-];
-
-
-// ===== ラベル更新 =====
-
-function updateLabel(item){
-
-const vector =
-item.node.position.clone();
-
-vector.applyMatrix4(
-earthGroup.matrixWorld
+const worldPosition =
+item.node.getWorldPosition(
+new THREE.Vector3()
 );
 
-vector.project(camera);
+const projected =
+worldPosition.clone().project(camera);
 
 const x =
-(vector.x*0.5+0.5)
+(projected.x*0.5+0.5)
 * window.innerWidth;
 
 const y =
-(-vector.y*0.5+0.5)
+(-projected.y*0.5+0.5)
 * window.innerHeight;
 
-item.label.style.left = `${x}px`;
+item.label.style.left =
+`${x}px`;
 
-item.label.style.top = `${y}px`;
+item.label.style.top =
+`${y}px`;
 
 
-// 裏側なら非表示
+// ===== Hide Behind Earth =====
 
-if(vector.z > 1){
+const cameraDirection =
+camera.position.clone().normalize();
+
+const nodeDirection =
+worldPosition.clone().normalize();
+
+const dot =
+cameraDirection.dot(nodeDirection);
+
+if(dot < 0){
 
 item.label.style.opacity = 0;
 
@@ -572,10 +645,12 @@ item.label.style.opacity = 1;
 
 }
 
+});
+
 }
 
 
-// ===== マウス回転 =====
+// ===== Mouse Rotation =====
 
 let isDragging = false;
 
@@ -623,13 +698,13 @@ y:event.offsetY
 );
 
 
-// ===== 画像アップロード =====
+// ===== Portrait Upload =====
 
 const imageUpload =
 document.getElementById('imageUpload');
 
-const manjiroImage =
-document.getElementById('manjiroImage');
+const portrait =
+document.getElementById('portrait');
 
 imageUpload.addEventListener(
 'change',
@@ -646,7 +721,7 @@ new FileReader();
 reader.onload =
 function(e){
 
-manjiroImage.src =
+portrait.src =
 e.target.result;
 
 };
@@ -659,23 +734,17 @@ reader.readAsDataURL(file);
 );
 
 
-// ===== アニメーション =====
+// ===== Animation =====
 
 function animate(){
 
 requestAnimationFrame(animate);
 
-earthGroup.rotation.y += 0.0015;
+earthGroup.rotation.y += 0.0012;
 
+stars.rotation.y += 0.00015;
 
-// ラベル更新
-
-labels.forEach(item=>{
-
-updateLabel(item);
-
-});
-
+updateLabels();
 
 renderer.render(
 scene,
@@ -687,7 +756,7 @@ camera
 animate();
 
 
-// ===== リサイズ =====
+// ===== Resize =====
 
 window.addEventListener(
 'resize',
