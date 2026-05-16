@@ -17,8 +17,6 @@ font-family:Arial,sans-serif;
 color:white;
 }
 
-/* ===== 3D背景 ===== */
-
 canvas{
 display:block;
 }
@@ -73,7 +71,7 @@ background:rgba(255,255,255,0.4);
 opacity:0.8;
 }
 
-/* ===== 都市ラベル ===== */
+/* ===== ラベル ===== */
 
 .label{
 position:absolute;
@@ -83,6 +81,7 @@ letter-spacing:2px;
 text-shadow:0 0 10px rgba(255,255,255,0.9);
 pointer-events:none;
 z-index:20;
+transition:opacity 0.3s;
 }
 
 /* ===== 情報パネル ===== */
@@ -90,20 +89,20 @@ z-index:20;
 .panel{
 position:absolute;
 right:30px;
-top:120px;
-width:320px;
+top:110px;
+width:340px;
 background:rgba(0,0,0,0.75);
 border:1px solid rgba(255,255,255,0.2);
 padding:20px;
 z-index:30;
 backdrop-filter:blur(10px);
-box-shadow:0 0 20px rgba(0,150,255,0.25);
+box-shadow:0 0 25px rgba(0,150,255,0.25);
 }
 
 .panel img{
 width:100%;
+border-radius:8px;
 margin-bottom:15px;
-border-radius:6px;
 }
 
 .panel h2{
@@ -119,7 +118,13 @@ color:#ccc;
 }
 
 .highlight{
-color:#6fdcff;
+color:#7fe7ff;
+}
+
+.upload{
+margin-top:15px;
+font-size:12px;
+color:#aaa;
 }
 
 </style>
@@ -138,7 +143,14 @@ color:#6fdcff;
 
 <div class="panel">
 
-<img src="manjiro.jpg">
+<img id="manjiroImage" src="manjiro.jpg">
+
+<input
+type="file"
+id="imageUpload"
+class="upload"
+accept="image/*"
+>
 
 <h2>JOHN MANJIRO</h2>
 
@@ -161,16 +173,12 @@ Japan and the modern world.
 
 <p>
 
-This map visualizes:
-
-<br><br>
-
-• Ocean Drift  
-• Whaling Routes  
-• Global Trade  
-• Cultural Exchange  
-• Technology Transfer  
-• The Dawn of Modernization  
+• Ocean Drift<br>
+• Pacific Routes<br>
+• Whaling Culture<br>
+• Technology Transfer<br>
+• Global Trade<br>
+• Modernization of Japan
 
 </p>
 
@@ -385,6 +393,8 @@ scene.add(ambientLight);
 
 // ===== ノード =====
 
+const routePoints = [];
+
 function createNode(lat,lon,color){
 
 const geometry =
@@ -424,12 +434,14 @@ radius*Math.sin(phi)*Math.sin(theta);
 
 earthGroup.add(node);
 
+routePoints.push(node.position);
+
 return node;
 
 }
 
 
-// ===== 万次郎ルート =====
+// ===== 地点 =====
 
 const tosashimizuNode =
 createNode(
@@ -467,30 +479,67 @@ createNode(
 );
 
 
+// ===== 光ルート =====
+
+const routeGeometry =
+new THREE.BufferGeometry().setFromPoints(
+routePoints
+);
+
+const routeMaterial =
+new THREE.LineBasicMaterial({
+color:0x66ccff,
+transparent:true,
+opacity:0.8
+});
+
+const routeLine =
+new THREE.Line(
+routeGeometry,
+routeMaterial
+);
+
+earthGroup.add(routeLine);
+
+
 // ===== ラベル =====
 
-const tosashimizuLabel =
-document.getElementById('tosashimizu');
+const labels = [
 
-const torishimaLabel =
-document.getElementById('torishima');
+{
+node:tosashimizuNode,
+label:document.getElementById('tosashimizu')
+},
 
-const hawaiiLabel =
-document.getElementById('hawaii');
+{
+node:torishimaNode,
+label:document.getElementById('torishima')
+},
 
-const newbedfordLabel =
-document.getElementById('newbedford');
+{
+node:hawaiiNode,
+label:document.getElementById('hawaii')
+},
 
-const sanfranciscoLabel =
-document.getElementById('sanfrancisco');
+{
+node:newbedfordNode,
+label:document.getElementById('newbedford')
+},
+
+{
+node:sanfranciscoNode,
+label:document.getElementById('sanfrancisco')
+}
+
+];
 
 
 // ===== ラベル更新 =====
 
-function updateLabel(node,label){
+function updateLabel(item){
 
 const vector =
-node.position.clone();
+item.node.position.clone();
 
 vector.applyMatrix4(
 earthGroup.matrixWorld
@@ -506,13 +555,27 @@ const y =
 (-vector.y*0.5+0.5)
 * window.innerHeight;
 
-label.style.left = `${x}px`;
-label.style.top = `${y}px`;
+item.label.style.left = `${x}px`;
+
+item.label.style.top = `${y}px`;
+
+
+// 裏側なら非表示
+
+if(vector.z > 1){
+
+item.label.style.opacity = 0;
+
+}else{
+
+item.label.style.opacity = 1;
+
+}
 
 }
 
 
-// ===== マウス操作 =====
+// ===== マウス回転 =====
 
 let isDragging = false;
 
@@ -560,6 +623,42 @@ y:event.offsetY
 );
 
 
+// ===== 画像アップロード =====
+
+const imageUpload =
+document.getElementById('imageUpload');
+
+const manjiroImage =
+document.getElementById('manjiroImage');
+
+imageUpload.addEventListener(
+'change',
+function(event){
+
+const file =
+event.target.files[0];
+
+if(file){
+
+const reader =
+new FileReader();
+
+reader.onload =
+function(e){
+
+manjiroImage.src =
+e.target.result;
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+}
+);
+
+
 // ===== アニメーション =====
 
 function animate(){
@@ -569,32 +668,13 @@ requestAnimationFrame(animate);
 earthGroup.rotation.y += 0.0015;
 
 
-// ラベル追従
+// ラベル更新
 
-updateLabel(
-tosashimizuNode,
-tosashimizuLabel
-);
+labels.forEach(item=>{
 
-updateLabel(
-torishimaNode,
-torishimaLabel
-);
+updateLabel(item);
 
-updateLabel(
-hawaiiNode,
-hawaiiLabel
-);
-
-updateLabel(
-newbedfordNode,
-newbedfordLabel
-);
-
-updateLabel(
-sanfranciscoNode,
-sanfranciscoLabel
-);
+});
 
 
 renderer.render(
