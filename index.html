@@ -1,680 +1,566 @@
-<!-- ========================= -->
-<!-- GLOBAL HISTORY MAP v5 -->
-<!-- JOHN MANJIRO EDITION -->
-<!-- ========================= -->
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>GLOBAL HISTORY MAP</title>
 
 <style>
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
-body{
-    overflow:hidden;
-    background:black;
-    color:white;
-    font-family:'Inter',sans-serif;
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#000;
+  font-family:Arial, Helvetica, sans-serif;
+  color:white;
 }
-
-/* ========================= */
-/* BACKGROUND */
-/* ========================= */
 
 #bg{
-    position:fixed;
-    inset:0;
-    background:
-    radial-gradient(circle at center, rgba(0,150,255,.08), transparent 60%),
-    black;
-    z-index:-3;
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at center, rgba(0,120,255,0.08), transparent 60%),
+    #000;
 }
 
-.stars{
-    position:fixed;
-    inset:0;
-    z-index:-2;
+#stars{
+  position:fixed;
+  inset:0;
+  background-image:
+    radial-gradient(2px 2px at 20px 30px,#fff,transparent),
+    radial-gradient(1px 1px at 90px 120px,#fff,transparent),
+    radial-gradient(1px 1px at 200px 80px,#fff,transparent),
+    radial-gradient(2px 2px at 300px 200px,#fff,transparent),
+    radial-gradient(1px 1px at 500px 300px,#fff,transparent);
+  background-size:600px 600px;
+  opacity:.7;
 }
 
-.star{
-    position:absolute;
-    background:white;
-    border-radius:50%;
-    opacity:.8;
+#globeViz{
+  position:fixed;
+  inset:0;
+  z-index:1;
 }
-
-/* ========================= */
-/* TITLE */
-/* ========================= */
 
 .title{
-    position:absolute;
-    top:18px;
-    width:100%;
-    text-align:center;
-    z-index:10;
-    pointer-events:none;
-}
-
-.title h1{
-    font-size:82px;
-    font-weight:800;
-    letter-spacing:8px;
-
-    color:white;
-
-    text-shadow:
+  position:fixed;
+  top:18px;
+  width:100%;
+  text-align:center;
+  font-size:5vw;
+  font-weight:900;
+  letter-spacing:.08em;
+  color:white;
+  text-shadow:
     0 0 10px rgba(255,255,255,.9),
-    0 0 25px rgba(255,255,255,.8),
+    0 0 25px rgba(255,255,255,.9),
     0 0 45px rgba(255,255,255,.7);
+  z-index:20;
+  pointer-events:none;
 }
 
 .subtitle{
-    margin-top:14px;
-    color:#45dfff;
-    letter-spacing:12px;
-    font-size:16px;
+  position:fixed;
+  top:140px;
+  width:100%;
+  text-align:center;
+  font-size:18px;
+  letter-spacing:.5em;
+  color:#3ee6ff;
+  z-index:20;
+  pointer-events:none;
 }
 
-/* ========================= */
-/* LEFT PANEL */
-/* ========================= */
+.panel{
+  position:fixed;
+  top:90px;
+  width:360px;
+  height:78vh;
+  background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(6px);
+  overflow-y:auto;
+  z-index:30;
+}
 
 .left-panel{
-    position:absolute;
-    left:28px;
-    top:100px;
-
-    width:370px;
-    height:640px;
-
-    padding:24px;
-
-    background:rgba(0,0,0,.45);
-
-    border:1px solid rgba(255,255,255,.08);
-
-    backdrop-filter:blur(10px);
-
-    overflow:auto;
-
-    z-index:20;
+  left:28px;
 }
 
-.left-panel h2{
-    font-size:14px;
-    letter-spacing:5px;
-    margin-bottom:30px;
-    color:white;
+.right-panel{
+  right:28px;
 }
 
-.event{
-    position:relative;
-
-    margin-bottom:38px;
-    padding-left:22px;
-
-    border-left:3px solid #00e5ff;
-
-    transition:.3s;
+.panel-inner{
+  padding:24px;
 }
 
-.event:hover{
-    transform:translateX(6px);
-    border-left:3px solid white;
+.panel-title{
+  font-size:16px;
+  letter-spacing:.3em;
+  margin-bottom:28px;
+  font-weight:700;
+}
+
+.event-item{
+  position:relative;
+  padding-left:24px;
+  margin-bottom:34px;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.event-item::before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:4px;
+  width:3px;
+  height:92%;
+  background:#27e7ff;
+  box-shadow:0 0 12px #27e7ff;
+}
+
+.event-item:hover{
+  transform:translateX(6px);
 }
 
 .event-year{
-    color:#57e9ff;
-    font-size:14px;
-    letter-spacing:4px;
-    margin-bottom:12px;
+  color:#3ee6ff;
+  letter-spacing:.25em;
+  font-size:14px;
+  margin-bottom:12px;
 }
 
 .event-text{
-    font-size:16px;
-    line-height:1.7;
-    color:rgba(255,255,255,.92);
+  font-size:16px;
+  line-height:1.8;
+  color:rgba(255,255,255,.92);
 }
 
-/* ========================= */
-/* RIGHT PANEL */
-/* ========================= */
-
-.right-panel{
-    position:absolute;
-
-    right:28px;
-    top:88px;
-
-    width:380px;
-    height:760px;
-
-    background:rgba(0,0,0,.55);
-
-    border:1px solid rgba(255,255,255,.08);
-
-    backdrop-filter:blur(10px);
-
-    padding:18px;
-
-    overflow:auto;
-
-    z-index:20;
-}
-
-.selector{
-    width:100%;
-    background:black;
-    border:1px solid rgba(255,255,255,.2);
-    color:white;
-    padding:16px;
-    margin-bottom:28px;
-    font-size:16px;
+select{
+  width:100%;
+  background:black;
+  border:1px solid rgba(255,255,255,.25);
+  color:white;
+  padding:16px;
+  font-size:16px;
+  margin-bottom:28px;
 }
 
 .portrait{
-    width:190px;
-    height:190px;
-
-    object-fit:cover;
-
-    border-radius:26px;
-
-    display:block;
-
-    margin:0 auto 30px auto;
-
-    box-shadow:
-    0 0 20px rgba(0,255,255,.25);
+  width:190px;
+  height:190px;
+  object-fit:cover;
+  border-radius:22px;
+  display:block;
+  margin:0 auto 30px;
+  box-shadow:0 0 24px rgba(62,230,255,.35);
 }
 
-.name{
-    font-size:64px;
-    font-weight:800;
-    line-height:.95;
-    margin-bottom:22px;
+.person-name{
+  font-size:70px;
+  line-height:.92;
+  font-weight:900;
+  margin-bottom:20px;
 }
 
-.life{
-    color:#55dcff;
-    letter-spacing:10px;
-    font-size:16px;
-    margin-bottom:36px;
+.person-years{
+  color:#3ee6ff;
+  letter-spacing:.35em;
+  font-size:15px;
+  margin-bottom:34px;
 }
 
-.bio{
-    font-size:17px;
-    line-height:2;
-    color:rgba(255,255,255,.88);
+.person-description{
+  font-size:17px;
+  line-height:1.95;
+  color:rgba(255,255,255,.9);
 }
-
-/* ========================= */
-/* GLOBE */
-/* ========================= */
-
-#container{
-    position:absolute;
-    inset:0;
-    z-index:1;
-}
-
-/* ========================= */
-/* TIMELINE */
-/* ========================= */
 
 .timeline-wrap{
-    position:absolute;
-
-    bottom:36px;
-    left:240px;
-    right:240px;
-
-    height:90px;
-
-    z-index:30;
+  position:fixed;
+  bottom:48px;
+  left:14%;
+  width:72%;
+  z-index:40;
 }
 
-.timeline-line{
-    position:absolute;
-    top:48px;
-
-    width:100%;
-    height:2px;
-
-    background:rgba(255,255,255,.18);
+.timeline-years{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:14px;
+  color:rgba(255,255,255,.78);
+  font-size:15px;
+  letter-spacing:.2em;
 }
 
-.timeline-glow{
-    position:absolute;
-    top:46px;
-    left:56%;
-
-    width:230px;
-    height:4px;
-
-    background:#00e5ff;
-
-    box-shadow:
-    0 0 12px #00e5ff,
-    0 0 24px #00e5ff,
-    0 0 36px #00e5ff;
+.timeline{
+  position:relative;
+  width:100%;
+  height:3px;
+  background:rgba(255,255,255,.18);
 }
 
-.year{
-    position:absolute;
-    top:0;
-
-    color:white;
-    opacity:.7;
-
-    font-size:14px;
-    letter-spacing:3px;
+.life-bar{
+  position:absolute;
+  top:-1px;
+  height:5px;
+  background:#27e7ff;
+  box-shadow:
+    0 0 10px #27e7ff,
+    0 0 20px #27e7ff,
+    0 0 35px rgba(39,231,255,.9);
 }
 
-/* ========================= */
-/* LABELS */
-/* ========================= */
-
-.label{
-    position:absolute;
-
-    color:white;
-
-    font-size:15px;
-    letter-spacing:3px;
-
-    text-shadow:
-    0 0 10px rgba(255,255,255,.9);
-
-    pointer-events:none;
+.event-dot{
+  position:absolute;
+  top:-7px;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:#fff;
+  border:2px solid #27e7ff;
+  box-shadow:0 0 18px #27e7ff;
+  cursor:pointer;
 }
 
-.label.cyan{
-    color:#61ecff;
+.event-label{
+  position:absolute;
+  top:-34px;
+  transform:translateX(-50%);
+  font-size:11px;
+  color:#3ee6ff;
+  letter-spacing:.2em;
+  white-space:nowrap;
 }
 
-.label.white{
-    color:white;
+.popup{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:380px;
+  background:rgba(0,0,0,.92);
+  border:1px solid rgba(62,230,255,.4);
+  padding:28px;
+  z-index:999;
+  display:none;
+  box-shadow:0 0 40px rgba(39,231,255,.3);
 }
 
-/* ========================= */
-/* MOBILE */
-/* ========================= */
+.popup h2{
+  margin-bottom:16px;
+  color:#3ee6ff;
+}
+
+.popup p{
+  line-height:1.9;
+  font-size:16px;
+}
+
+.close-btn{
+  margin-top:24px;
+  padding:10px 18px;
+  background:#27e7ff;
+  color:black;
+  border:none;
+  cursor:pointer;
+  font-weight:700;
+}
 
 @media(max-width:1200px){
 
-.left-panel,
-.right-panel{
-    transform:scale(.85);
-    transform-origin:top;
-}
+  .title{
+    font-size:10vw;
+    top:24px;
+  }
 
-.title h1{
-    font-size:56px;
-}
+  .subtitle{
+    top:135px;
+    font-size:12px;
+  }
 
-}
+  .panel{
+    width:100%;
+    height:auto;
+    position:relative;
+    top:auto;
+    left:auto;
+    right:auto;
+    margin-bottom:18px;
+  }
 
+  .left-panel,
+  .right-panel{
+    position:relative;
+    margin:12px;
+  }
+
+  .timeline-wrap{
+    left:5%;
+    width:90%;
+    bottom:20px;
+  }
+
+  .person-name{
+    font-size:46px;
+  }
+
+  body{
+    overflow:auto;
+  }
+}
 </style>
 </head>
 
 <body>
 
 <div id="bg"></div>
+<div id="stars"></div>
+<div id="globeViz"></div>
 
-<div class="stars" id="stars"></div>
+<div class="title">GLOBAL HISTORY MAP</div>
+<div class="subtitle">JOHN MANJIRO</div>
 
-<!-- ========================= -->
-<!-- TITLE -->
-<!-- ========================= -->
+<div class="panel left-panel">
+  <div class="panel-inner">
 
-<div class="title">
-    <h1>GLOBAL HISTORY MAP</h1>
-    <div class="subtitle">JOHN MANJIRO</div>
+    <div class="panel-title">WORLD EVENTS</div>
+
+    <div class="event-item" onclick="focusEvent(0)">
+      <div class="event-year">1839</div>
+      <div class="event-text">
+        The First Opium War begins between Britain and Qing China.
+      </div>
+    </div>
+
+    <div class="event-item" onclick="focusEvent(1)">
+      <div class="event-year">1848</div>
+      <div class="event-text">
+        California Gold Rush accelerates Pacific migration and trade.
+      </div>
+    </div>
+
+    <div class="event-item" onclick="focusEvent(2)">
+      <div class="event-year">1853</div>
+      <div class="event-text">
+        Commodore Perry arrives in Japan with the Black Ships.
+      </div>
+    </div>
+
+    <div class="event-item" onclick="focusEvent(3)">
+      <div class="event-year">1868</div>
+      <div class="event-text">
+        The Meiji Restoration transforms Japan into a modern nation.
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<!-- ========================= -->
-<!-- LEFT EVENTS -->
-<!-- ========================= -->
+<div class="panel right-panel">
+  <div class="panel-inner">
 
-<div class="left-panel">
+    <select>
+      <option>JOHN MANJIRO</option>
+    </select>
 
-<h2>WORLD EVENTS</h2>
+    <img class="portrait" src="john-manjiro-portrait.png" />
 
-<div class="event">
-<div class="event-year">1839</div>
-<div class="event-text">
-The First Opium War begins between Britain and Qing China.
+    <div class="person-name">
+      JOHN<br>
+      MANJIRO
+    </div>
+
+    <div class="person-years">
+      1827 — 1898
+    </div>
+
+    <div class="person-description">
+      Nakahama Manjiro connected Japan and America during the dawn of globalization.
+      <br><br>
+      Shipwrecked as a teenager and rescued by an American whaling ship,
+      he crossed the Pacific, studied navigation and Western science,
+      and returned to Japan during the final years of the Edo period.
+      <br><br>
+      His life symbolized the opening of Japan to the wider world.
+    </div>
+
+  </div>
 </div>
-</div>
-
-<div class="event">
-<div class="event-year">1848</div>
-<div class="event-text">
-California Gold Rush accelerates Pacific migration and trade.
-</div>
-</div>
-
-<div class="event">
-<div class="event-year">1853</div>
-<div class="event-text">
-Commodore Perry arrives in Japan with the Black Ships.
-</div>
-</div>
-
-<div class="event">
-<div class="event-year">1868</div>
-<div class="event-text">
-The Meiji Restoration transforms Japan into a modern nation.
-</div>
-</div>
-
-</div>
-
-<!-- ========================= -->
-<!-- RIGHT PANEL -->
-<!-- ========================= -->
-
-<div class="right-panel">
-
-<select class="selector">
-<option>JOHN MANJIRO</option>
-<option>NIKOLA TESLA</option>
-</select>
-
-<img src="john-manjiro-portrait.png" class="portrait">
-
-<div class="name">
-JOHN<br>MANJIRO
-</div>
-
-<div class="life">
-1827 — 1898
-</div>
-
-<div class="bio">
-Nakahama Manjiro connected Japan and America during the dawn of globalization.<br><br>
-
-Shipwrecked as a teenager and rescued by an American whaling ship, he crossed the Pacific, studied navigation and Western science, and returned to Japan during the final years of the Edo period.
-</div>
-
-</div>
-
-<!-- ========================= -->
-<!-- TIMELINE -->
-<!-- ========================= -->
 
 <div class="timeline-wrap">
 
-<div class="timeline-line"></div>
+  <div class="timeline-years">
+    <span>1600</span>
+    <span>1700</span>
+    <span>1800</span>
+    <span>1850</span>
+    <span>1900</span>
+    <span>2000</span>
+  </div>
 
-<div class="timeline-glow"></div>
+  <div class="timeline">
 
-<div class="year" style="left:0%">1600</div>
-<div class="year" style="left:20%">1700</div>
-<div class="year" style="left:40%">1800</div>
-<div class="year" style="left:60%">1850</div>
-<div class="year" style="left:80%">1900</div>
-<div class="year" style="left:96%">2000</div>
+    <div class="life-bar" style="left:56%; width:19%;"></div>
 
+    <div class="event-dot" style="left:60%;" onclick="focusEvent(0)"></div>
+    <div class="event-label" style="left:60%;">1839</div>
+
+    <div class="event-dot" style="left:64%;" onclick="focusEvent(1)"></div>
+    <div class="event-label" style="left:64%;">1848</div>
+
+    <div class="event-dot" style="left:66%;" onclick="focusEvent(2)"></div>
+    <div class="event-label" style="left:66%;">1853</div>
+
+    <div class="event-dot" style="left:69%;" onclick="focusEvent(3)"></div>
+    <div class="event-label" style="left:69%;">1868</div>
+
+  </div>
 </div>
 
-<!-- ========================= -->
-<!-- THREE JS -->
-<!-- ========================= -->
+<div class="popup" id="popup">
+  <h2 id="popupTitle"></h2>
+  <p id="popupText"></p>
+  <button class="close-btn" onclick="closePopup()">CLOSE</button>
+</div>
 
-<div id="container"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/controls/OrbitControls.js"></script>
+<script src="https://unpkg.com/three"></script>
+<script src="https://unpkg.com/globe.gl"></script>
 
 <script>
+const world = Globe()
+(document.getElementById('globeViz'))
+.globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+.bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
+.backgroundColor('rgba(0,0,0,0)')
+.atmosphereColor('#27e7ff')
+.atmosphereAltitude(0.18);
 
-/* ========================= */
-/* STARS */
-/* ========================= */
+world.controls().enablePan = false;
+world.controls().minDistance = 220;
+world.controls().maxDistance = 420;
+world.controls().autoRotate = true;
+world.controls().autoRotateSpeed = .45;
 
-const stars = document.getElementById('stars');
+world.pointOfView({
+  lat:30,
+  lng:160,
+  altitude:2.1
+},0);
 
-for(let i=0;i<250;i++){
+const locations = [
+  {
+    lat:32.78,
+    lng:132.95,
+    size:0.45,
+    color:'#27e7ff',
+    label:'TOSASHIMIZU'
+  },
+  {
+    lat:21.3,
+    lng:-157.8,
+    size:0.45,
+    color:'#27e7ff',
+    label:'HAWAII'
+  },
+  {
+    lat:37.77,
+    lng:-122.41,
+    size:0.45,
+    color:'#27e7ff',
+    label:'SAN FRANCISCO'
+  }
+];
 
-    const s = document.createElement('div');
+world
+.pointsData(locations)
+.pointAltitude(0.015)
+.pointRadius('size')
+.pointColor('color')
+.pointLabel('label');
 
-    s.className='star';
+const arcs = [
+  {
+    startLat:32.78,
+    startLng:132.95,
+    endLat:21.3,
+    endLng:-157.8,
+    color:['#27e7ff','#27e7ff']
+  },
+  {
+    startLat:21.3,
+    startLng:-157.8,
+    endLat:37.77,
+    endLng:-122.41,
+    color:['#27e7ff','#27e7ff']
+  }
+];
 
-    const size=Math.random()*2;
+world
+.arcsData(arcs)
+.arcColor('color')
+.arcStroke(.8)
+.arcDashLength(.4)
+.arcDashGap(1.5)
+.arcDashAnimateTime(3000)
+.arcAltitude(.22);
 
-    s.style.width=size+'px';
-    s.style.height=size+'px';
+const events = [
+  {
+    title:'1839 — First Opium War',
+    text:'The Opium War reshaped Asian trade routes and intensified Western influence in East Asia.',
+    lat:31,
+    lng:121
+  },
+  {
+    title:'1848 — California Gold Rush',
+    text:'Global migration accelerated toward the Pacific world, linking Asia and America more deeply.',
+    lat:37,
+    lng:-122
+  },
+  {
+    title:'1853 — Perry Arrives in Japan',
+    text:'The Black Ships pressured Japan to open its ports to international relations.',
+    lat:35,
+    lng:139
+  },
+  {
+    title:'1868 — Meiji Restoration',
+    text:'Japan rapidly modernized and entered the global industrial era.',
+    lat:35,
+    lng:135
+  }
+];
 
-    s.style.left=Math.random()*100+'%';
-    s.style.top=Math.random()*100+'%';
+function focusEvent(index){
 
-    s.style.opacity=Math.random();
+  const e = events[index];
 
-    stars.appendChild(s);
+  document.getElementById('popup').style.display = 'block';
+  document.getElementById('popupTitle').innerText = e.title;
+  document.getElementById('popupText').innerText = e.text;
+
+  world.pointOfView({
+    lat:e.lat,
+    lng:e.lng,
+    altitude:1.6
+  },1200);
 }
 
-/* ========================= */
-/* SCENE */
-/* ========================= */
-
-const scene = new THREE.Scene();
-
-const camera = new THREE.PerspectiveCamera(
-45,
-window.innerWidth/window.innerHeight,
-0.1,
-1000
-);
-
-camera.position.z = 8;
-
-const renderer = new THREE.WebGLRenderer({
-antialias:true,
-alpha:true
-});
-
-renderer.setSize(window.innerWidth,window.innerHeight);
-
-document.getElementById('container')
-.appendChild(renderer.domElement);
-
-/* ========================= */
-/* CONTROLS */
-/* ========================= */
-
-const controls = new THREE.OrbitControls(
-camera,
-renderer.domElement
-);
-
-controls.enableDamping=true;
-controls.dampingFactor=.05;
-
-controls.enablePan=false;
-
-controls.minDistance=5;
-controls.maxDistance=12;
-
-/* ========================= */
-/* LIGHT */
-/* ========================= */
-
-const ambient = new THREE.AmbientLight(0xffffff,.9);
-scene.add(ambient);
-
-const dir = new THREE.DirectionalLight(0xffffff,1.2);
-
-dir.position.set(5,3,5);
-
-scene.add(dir);
-
-/* ========================= */
-/* EARTH */
-/* ========================= */
-
-const textureLoader = new THREE.TextureLoader();
-
-const earthTexture = textureLoader.load(
-'https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg'
-);
-
-const geometry = new THREE.SphereGeometry(3,128,128);
-
-const material = new THREE.MeshStandardMaterial({
-map:earthTexture
-});
-
-const earth = new THREE.Mesh(geometry,material);
-
-scene.add(earth);
-
-/* ========================= */
-/* GLOW */
-/* ========================= */
-
-const glowGeometry = new THREE.SphereGeometry(3.08,64,64);
-
-const glowMaterial = new THREE.MeshBasicMaterial({
-color:0x00dfff,
-transparent:true,
-opacity:.12
-});
-
-const glow = new THREE.Mesh(glowGeometry,glowMaterial);
-
-scene.add(glow);
-
-/* ========================= */
-/* LOCATIONS */
-/* ========================= */
-
-function latLongToVector3(lat,lon,radius){
-
-    const phi=(90-lat)*(Math.PI/180);
-    const theta=(lon+180)*(Math.PI/180);
-
-    const x=-(radius*Math.sin(phi)*Math.cos(theta));
-    const z=(radius*Math.sin(phi)*Math.sin(theta));
-    const y=(radius*Math.cos(phi));
-
-    return new THREE.Vector3(x,y,z);
+function closePopup(){
+  document.getElementById('popup').style.display = 'none';
 }
-
-const tosa = latLongToVector3(32.78,132.95,3.02);
-const hawaii = latLongToVector3(19.89,-155.58,3.02);
-const sf = latLongToVector3(37.77,-122.41,3.02);
-
-/* ========================= */
-/* DOTS */
-/* ========================= */
-
-function addDot(position,color){
-
-    const geo = new THREE.SphereGeometry(.06,16,16);
-
-    const mat = new THREE.MeshBasicMaterial({
-        color:color
-    });
-
-    const dot = new THREE.Mesh(geo,mat);
-
-    dot.position.copy(position);
-
-    scene.add(dot);
-
-    return dot;
-}
-
-addDot(tosa,0x00e5ff);
-addDot(hawaii,0x00e5ff);
-addDot(sf,0xffffff);
-
-/* ========================= */
-/* ARC */
-/* ========================= */
-
-function createArc(start,end){
-
-    const mid = start.clone().add(end).multiplyScalar(.5);
-
-    mid.normalize();
-    mid.multiplyScalar(4.2);
-
-    const curve = new THREE.QuadraticBezierCurve3(
-        start,
-        mid,
-        end
-    );
-
-    const points = curve.getPoints(100);
-
-    const geometry = new THREE.BufferGeometry().setFromPoints(points);
-
-    const material = new THREE.LineBasicMaterial({
-        color:0x00e5ff,
-        transparent:true,
-        opacity:.9
-    });
-
-    const line = new THREE.Line(geometry,material);
-
-    scene.add(line);
-}
-
-createArc(tosa,hawaii);
-createArc(hawaii,sf);
-
-/* ========================= */
-/* ANIMATE */
-/* ========================= */
-
-function animate(){
-
-    requestAnimationFrame(animate);
-
-    earth.rotation.y += 0.0007;
-    glow.rotation.y += 0.0007;
-
-    controls.update();
-
-    renderer.render(scene,camera);
-}
-
-animate();
-
-/* ========================= */
-/* RESIZE */
-/* ========================= */
-
-window.addEventListener('resize',()=>{
-
-    camera.aspect =
-    window.innerWidth/window.innerHeight;
-
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(
-    window.innerWidth,
-    window.innerHeight
-    );
-});
-
 </script>
 
 </body>
 </html>
+
+その後、右上の `Commit changes...` を押せば反映されます。
