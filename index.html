@@ -49,7 +49,7 @@ color:#7fe7ff;
 }
 
 /* =========================
-PANEL
+SIDE PANEL
 ========================= */
 
 .panel{
@@ -60,7 +60,7 @@ width:340px;
 
 background:rgba(0,0,0,0.72);
 
-border:1px solid rgba(255,255,255,0.15);
+border:1px solid rgba(255,255,255,0.12);
 
 padding:20px;
 
@@ -69,13 +69,14 @@ z-index:30;
 backdrop-filter:blur(10px);
 
 box-shadow:
-0 0 30px rgba(0,150,255,0.2);
+0 0 40px rgba(0,150,255,0.2);
 }
 
 .panel img{
 width:100%;
-border-radius:12px;
+border-radius:14px;
 margin-bottom:15px;
+display:block;
 }
 
 .panel h2{
@@ -185,7 +186,7 @@ letter-spacing:2px;
 color:white;
 
 text-shadow:
-0 0 12px rgba(255,255,255,0.9);
+0 0 14px rgba(255,255,255,1);
 
 pointer-events:none;
 
@@ -216,7 +217,7 @@ JOHN MANJIRO
 </div>
 
 <!-- =========================
-PANEL
+SIDE PANEL
 ========================= -->
 
 <div class="panel">
@@ -247,10 +248,7 @@ JOHN MANJIRO
 </div>
 
 <p id="description">
-
-Nakahama Manjiro connected Japan and
-America during the dawn of globalization.
-
+Nakahama Manjiro connected Japan and America during the dawn of globalization.
 </p>
 
 <div
@@ -530,7 +528,7 @@ name:'NIKOLA TESLA',
 life:'1856 — 1943',
 
 portrait:
-'nikola-tesla-portrait.jpeg',
+'nikola-tesla-portrait.jpg',
 
 description:
 'Tesla transformed modern civilization through electricity, wireless communication, and visionary engineering.',
@@ -630,12 +628,12 @@ return new THREE.Vector3(x,y,z);
 }
 
 /* =========================
-CURRENT OBJECTS
+OBJECT STORAGE
 ========================= */
 
 let nodes = [];
 let labels = [];
-let routeLine = null;
+let routeMeshes = [];
 
 /* =========================
 CLEAR
@@ -655,9 +653,59 @@ label.remove();
 
 labels = [];
 
-if(routeLine){
-earthGroup.remove(routeLine);
+routeMeshes.forEach(route=>{
+earthGroup.remove(route);
+});
+
+routeMeshes = [];
+
 }
+
+/* =========================
+CREATE GLOW ROUTE
+========================= */
+
+function createRoute(start,end,color){
+
+const mid =
+start.clone()
+.add(end)
+.multiplyScalar(0.5);
+
+mid.normalize().multiplyScalar(2.45);
+
+const curve =
+new THREE.QuadraticBezierCurve3(
+start,
+mid,
+end
+);
+
+const geometry =
+new THREE.TubeGeometry(
+curve,
+64,
+0.01,
+8,
+false
+);
+
+const material =
+new THREE.MeshBasicMaterial({
+color:color,
+transparent:true,
+opacity:0.9
+});
+
+const tube =
+new THREE.Mesh(
+geometry,
+material
+);
+
+earthGroup.add(tube);
+
+routeMeshes.push(tube);
 
 }
 
@@ -704,11 +752,9 @@ tagsContainer.appendChild(div);
 
 });
 
-/* ===== ROUTE ===== */
+/* ===== NODES ===== */
 
-const routePoints = [];
-
-/* ===== CREATE NODES ===== */
+const positions = [];
 
 data.locations.forEach(location=>{
 
@@ -716,14 +762,14 @@ const position =
 latLonToVector3(
 location.lat,
 location.lon,
-2.04
+2.03
 );
 
-routePoints.push(position);
+positions.push(position);
 
 const geometry =
 new THREE.SphereGeometry(
-0.045,
+0.05,
 16,
 16
 );
@@ -765,47 +811,17 @@ node:node
 
 });
 
-/* ===== CURVE ===== */
+/* ===== ROUTES ===== */
 
-const elevatedPoints =
-routePoints.map(point=>{
+for(let i=0;i<positions.length-1;i++){
 
-return point.clone()
-.normalize()
-.multiplyScalar(2.12);
-
-});
-
-const curve =
-new THREE.CatmullRomCurve3(
-elevatedPoints
+createRoute(
+positions[i],
+positions[i+1],
+data.color
 );
 
-const curvePoints =
-curve.getPoints(400);
-
-const routeGeometry =
-new THREE.BufferGeometry()
-.setFromPoints(curvePoints);
-
-const routeMaterial =
-new THREE.LineBasicMaterial({
-
-color:data.color,
-
-transparent:true,
-
-opacity:1
-
-});
-
-routeLine =
-new THREE.Line(
-routeGeometry,
-routeMaterial
-);
-
-earthGroup.add(routeLine);
+}
 
 }
 
@@ -894,7 +910,7 @@ label.style.opacity = 1;
 }
 
 /* =========================
-MOUSE ROTATION
+MOUSE CONTROL
 ========================= */
 
 let isDragging = false;
@@ -959,7 +975,7 @@ earthGroup.rotation.y +=
 0.0012;
 
 stars.rotation.y +=
-0.00015;
+0.0001;
 
 updateLabels();
 
