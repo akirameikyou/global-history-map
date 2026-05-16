@@ -1,573 +1,571 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>GLOBAL HISTORY MAP</title>
+<title>世界史地図 | ジョン・マンジロウ</title>
 
 <style>
-
-*{
+html, body{
     margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
+    width:100%;
+    height:100%;
     overflow:hidden;
-    background:black;
+    background:#000;
+    font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
     color:white;
-    font-family:Arial, Helvetica, sans-serif;
 }
 
 /* 星空 */
-
-body::before{
-    content:"";
+#stars{
     position:fixed;
     inset:0;
     background:
-    radial-gradient(circle at 20% 30%, white 1px, transparent 2px),
-    radial-gradient(circle at 70% 60%, white 1px, transparent 2px),
-    radial-gradient(circle at 40% 80%, white 1px, transparent 2px),
-    radial-gradient(circle at 90% 20%, white 1px, transparent 2px);
-    background-size:300px 300px;
-    opacity:0.35;
-    z-index:-1;
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.8) 1px, transparent 1px),
+        radial-gradient(circle at 70% 80%, rgba(255,255,255,.7) 1px, transparent 1px),
+        radial-gradient(circle at 40% 60%, rgba(255,255,255,.6) 1px, transparent 1px),
+        radial-gradient(circle at 90% 20%, rgba(255,255,255,.9) 1px, transparent 1px),
+        #000;
+    background-size: 240px 240px;
+    opacity:.85;
+    z-index:0;
 }
 
 /* タイトル */
-
-.title{
+.title-wrap{
     position:absolute;
     top:20px;
     width:100%;
     text-align:center;
-    font-size:90px;
+    z-index:20;
+    pointer-events:none;
+}
+
+.main-title{
+    font-size:76px;
     font-weight:900;
-    letter-spacing:6px;
+    letter-spacing:4px;
+    margin:0;
     color:white;
+    opacity:.9;
     text-shadow:
-    0 0 10px white,
-    0 0 30px white,
-    0 0 60px white;
-    z-index:10;
+        0 0 10px rgba(255,255,255,.7),
+        0 0 30px rgba(255,255,255,.5);
 }
 
-.subtitle{
-    position:absolute;
-    top:145px;
-    width:100%;
-    text-align:center;
-    color:#36e6ff;
-    font-size:18px;
+.sub-title{
+    margin-top:14px;
+    font-size:14px;
     letter-spacing:12px;
-    z-index:10;
+    color:#33dfff;
 }
 
-/* 地球 */
-
-#globeViz{
+/* 左パネル */
+.left-panel{
     position:absolute;
-    inset:0;
-}
-
-/* 左イベント */
-
-.leftPanel{
-    position:absolute;
-    left:25px;
+    left:28px;
     top:90px;
     width:380px;
     height:660px;
-    border:1px solid rgba(255,255,255,0.08);
-    background:rgba(0,0,0,0.35);
-    padding:25px;
-    overflow:auto;
+    border:1px solid rgba(255,255,255,.1);
+    background:rgba(0,0,0,.55);
+    backdrop-filter:blur(8px);
     z-index:20;
+    overflow-y:auto;
 }
 
-.leftPanel h2{
-    letter-spacing:5px;
-    font-size:16px;
-    margin-bottom:35px;
-}
-
-.eventItem{
-    margin-bottom:35px;
-    padding-left:18px;
-    border-left:4px solid #28e7ff;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-.eventItem:hover{
-    transform:translateX(8px);
-}
-
-.eventYear{
-    color:#38e7ff;
+.panel-title{
+    padding:28px 24px 10px;
+    font-size:15px;
     letter-spacing:4px;
-    margin-bottom:14px;
-    font-size:15px;
+    font-weight:700;
 }
 
-.eventText{
-    line-height:1.7;
+.event{
+    padding:26px 24px 26px 48px;
+    position:relative;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.event:hover{
+    background:rgba(255,255,255,.04);
+}
+
+.event.active{
+    background:rgba(0,255,255,.06);
+}
+
+.event::before{
+    content:"";
+    position:absolute;
+    left:24px;
+    top:32px;
+    width:3px;
+    height:82px;
+    background:#22e8ff;
+    box-shadow:0 0 12px #22e8ff;
+}
+
+.event-year{
+    color:#39e6ff;
+    font-size:30px;
+    letter-spacing:4px;
+    margin-bottom:12px;
+    font-weight:700;
+}
+
+.event-text{
     font-size:15px;
+    line-height:1.9;
     color:#f0f0f0;
 }
 
-/* 右情報 */
-
-.rightPanel{
+/* 地球 */
+#globeViz{
     position:absolute;
-    right:25px;
+    inset:0;
+    z-index:5;
+}
+
+/* 情報カード */
+.info-card{
+    position:absolute;
+    left:50%;
+    bottom:130px;
+    transform:translateX(-50%);
+    width:540px;
+    background:rgba(0,0,0,.68);
+    border:1px solid rgba(0,255,255,.4);
+    backdrop-filter:blur(12px);
+    z-index:25;
+    padding:28px;
+    transition:.4s;
+}
+
+.info-card h2{
+    margin:0 0 16px;
+    color:#31e7ff;
+    font-size:38px;
+    line-height:1.1;
+}
+
+.info-card p{
+    margin:0;
+    line-height:1.9;
+    font-size:16px;
+    color:#f3f3f3;
+}
+
+/* 右パネル */
+.right-panel{
+    position:absolute;
+    right:28px;
     top:90px;
     width:380px;
     height:660px;
-    border:1px solid rgba(255,255,255,0.08);
-    background:rgba(0,0,0,0.35);
-    padding:22px;
-    overflow:auto;
+    background:rgba(0,0,0,.55);
+    border:1px solid rgba(255,255,255,.1);
+    backdrop-filter:blur(8px);
     z-index:20;
+    overflow:auto;
 }
 
-select{
-    width:100%;
-    height:56px;
-    background:black;
+.character-select{
+    width:calc(100% - 48px);
+    margin:24px;
+    padding:18px;
+    background:#000;
     color:white;
-    border:1px solid rgba(255,255,255,0.2);
-    padding:0 20px;
+    border:1px solid rgba(255,255,255,.2);
     font-size:16px;
-    margin-bottom:30px;
 }
 
-.personImage{
+.character-image{
     width:190px;
     height:190px;
     object-fit:cover;
     display:block;
-    margin:auto;
-    border-radius:22px;
-    box-shadow:0 0 25px rgba(0,255,255,0.4);
+    margin:14px auto 20px;
+    border-radius:24px;
+    box-shadow:0 0 24px rgba(0,255,255,.4);
 }
 
-.personName{
-    margin-top:40px;
-    font-size:70px;
+.character-name{
+    font-size:74px;
     font-weight:900;
-    line-height:0.92;
+    line-height:.9;
+    padding:0 28px;
+    margin-bottom:20px;
 }
 
-.personYears{
-    color:#38e7ff;
+.character-years{
+    color:#38e8ff;
     letter-spacing:8px;
-    margin-top:25px;
-    margin-bottom:35px;
+    padding:0 28px;
+    margin-bottom:30px;
     font-size:18px;
 }
 
-.personDesc{
-    line-height:1.9;
-    color:#eaeaea;
-    font-size:16px;
+.character-desc{
+    padding:0 28px 50px;
+    line-height:2;
+    font-size:15px;
+    color:#e6e6e6;
 }
 
 /* 年代バー */
-
 .timeline{
     position:absolute;
-    bottom:42px;
-    left:240px;
-    width:1320px;
-    height:4px;
-    background:rgba(255,255,255,0.18);
+    left:250px;
+    right:250px;
+    bottom:44px;
+    height:70px;
     z-index:30;
 }
 
-.timelineGlow{
+.timeline-line{
     position:absolute;
-    left:55%;
-    width:250px;
-    height:4px;
-    background:#25e7ff;
-    box-shadow:
-    0 0 10px #25e7ff,
-    0 0 30px #25e7ff;
+    top:34px;
+    width:100%;
+    height:2px;
+    background:rgba(255,255,255,.18);
 }
 
-/* 年代数字 */
-
-.yearLabel{
+.timeline-point{
     position:absolute;
-    top:-42px;
-    color:white;
-    opacity:0.85;
-    letter-spacing:3px;
-    font-size:14px;
-}
-
-/* マーカー */
-
-.marker{
-    position:absolute;
-    top:-9px;
-    width:18px;
-    height:18px;
+    top:22px;
+    width:22px;
+    height:22px;
     border-radius:50%;
-    background:#35e7ff;
-    box-shadow:
-    0 0 10px #35e7ff,
-    0 0 25px #35e7ff;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-.marker:hover{
-    transform:scale(1.35);
-}
-
-/* モーダル */
-
-#eventModal{
-    position:absolute;
-    inset:0;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:9999;
-    background:rgba(0,0,0,0.45);
-    backdrop-filter:blur(10px);
-}
-
-.modalContent{
-    width:450px;
-    background:rgba(0,0,0,0.86);
-    border:1px solid rgba(0,255,255,0.3);
-    padding:40px;
-    box-shadow:0 0 40px rgba(0,255,255,0.2);
-}
-
-.modalContent h2{
-    color:#38e7ff;
-    margin-bottom:20px;
-    font-size:42px;
-}
-
-.modalContent p{
-    line-height:1.9;
-    color:#efefef;
-    margin-bottom:30px;
-}
-
-.modalContent button{
-    width:120px;
-    height:48px;
-    border:none;
     background:#2ce7ff;
-    color:black;
-    font-weight:bold;
+    transform:translateX(-50%);
     cursor:pointer;
+    box-shadow:0 0 18px #2ce7ff;
+    transition:.25s;
 }
 
+.timeline-point:hover{
+    transform:translateX(-50%) scale(1.25);
+}
+
+.timeline-point.active{
+    background:white;
+    box-shadow:0 0 24px white;
+}
+
+.timeline-label{
+    position:absolute;
+    top:-8px;
+    transform:translateX(-50%);
+    font-size:13px;
+    color:#66ecff;
+    letter-spacing:2px;
+}
+
+.year-scale{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    color:#bfbfbf;
+    font-size:14px;
+    letter-spacing:2px;
+}
+
+/* レスポンシブ */
+@media(max-width:1400px){
+
+    .left-panel{
+        width:300px;
+    }
+
+    .right-panel{
+        width:320px;
+    }
+
+    .main-title{
+        font-size:58px;
+    }
+
+    .character-name{
+        font-size:56px;
+    }
+
+    .info-card{
+        width:440px;
+    }
+}
 </style>
 </head>
 
 <body>
 
-<div class="title">GLOBAL HISTORY MAP</div>
-<div class="subtitle">JOHN MANJIRO</div>
+<div id="stars"></div>
 
-<div id="globeViz"></div>
+<div class="title-wrap">
+    <h1 class="main-title">GLOBAL HISTORY MAP</h1>
+    <div class="sub-title">JOHN MANJIRO</div>
+</div>
 
-<!-- LEFT -->
+<!-- 左 -->
+<div class="left-panel">
 
-<div class="leftPanel">
+    <div class="panel-title">WORLD EVENTS</div>
 
-<h2>WORLD EVENTS</h2>
+    <div class="event active" onclick="focusEvent(0)">
+        <div class="event-year">1839</div>
+        <div class="event-text">
+            The First Opium War begins between Britain and Qing China.
+        </div>
+    </div>
 
-<div id="eventsContainer"></div>
+    <div class="event" onclick="focusEvent(1)">
+        <div class="event-year">1841</div>
+        <div class="event-text">
+            John Manjiro is shipwrecked and arrives at Torishima.
+        </div>
+    </div>
+
+    <div class="event" onclick="focusEvent(2)">
+        <div class="event-year">1848</div>
+        <div class="event-text">
+            California Gold Rush accelerates Pacific migration and trade.
+        </div>
+    </div>
+
+    <div class="event" onclick="focusEvent(3)">
+        <div class="event-year">1853</div>
+        <div class="event-text">
+            Commodore Perry arrives in Japan with the Black Ships.
+        </div>
+    </div>
+
+    <div class="event" onclick="focusEvent(4)">
+        <div class="event-year">1868</div>
+        <div class="event-text">
+            The Meiji Restoration transforms Japan into a modern nation.
+        </div>
+    </div>
 
 </div>
 
-<!-- RIGHT -->
-
-<div class="rightPanel">
-
-<select>
-<option>JOHN MANJIRO</option>
-</select>
-
-<img class="personImage"
-src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Nakahama_Manjir%C5%8D.jpg">
-
-<div class="personName">
-JOHN<br>MANJIRO
+<!-- 中央カード -->
+<div class="info-card" id="infoCard">
+    <h2 id="cardTitle">1839 — First Opium War</h2>
+    <p id="cardText">
+        The conflict between Britain and Qing China reshaped East Asian trade and marked the beginning of major global pressure on the region.
+    </p>
 </div>
 
-<div class="personYears">
-1827 — 1898
+<!-- 右 -->
+<div class="right-panel">
+
+    <select class="character-select">
+        <option>JOHN MANJIRO</option>
+    </select>
+
+    <img class="character-image"
+    src="https://upload.wikimedia.org/wikipedia/commons/3/31/Nakahama_Manjiro.jpg">
+
+    <div class="character-name">
+        JOHN<br>MANJIRO
+    </div>
+
+    <div class="character-years">
+        1827 — 1898
+    </div>
+
+    <div class="character-desc">
+        Nakahama Manjiro connected Japan and America during the dawn of globalization.<br><br>
+
+        After being shipwrecked as a teenager, he survived on Torishima and was rescued by an American whaling ship. He later studied navigation and Western science in America and returned to Japan during the final years of the Edo period.<br><br>
+
+        His experiences became an important bridge between Japan and the wider world.
+    </div>
+
 </div>
 
-<div class="personDesc">
-Nakahama Manjiro connected Japan and America during the dawn of globalization.
-<br><br>
-Shipwrecked as a teenager and rescued by an American whaling ship, he crossed the Pacific and returned to Japan carrying modern navigation and global knowledge.
-</div>
-
-</div>
-
-<!-- TIMELINE -->
-
+<!-- 年代 -->
 <div class="timeline">
 
-<div class="timelineGlow"></div>
+    <div class="timeline-line"></div>
 
-<div class="yearLabel" style="left:0%">1600</div>
-<div class="yearLabel" style="left:20%">1700</div>
-<div class="yearLabel" style="left:40%">1800</div>
-<div class="yearLabel" style="left:60%">1850</div>
-<div class="yearLabel" style="left:80%">1900</div>
+    <div class="timeline-point active" style="left:58%;" onclick="focusEvent(0)">
+        <div class="timeline-label">1839</div>
+    </div>
+
+    <div class="timeline-point" style="left:64%;" onclick="focusEvent(1)">
+        <div class="timeline-label">1841</div>
+    </div>
+
+    <div class="timeline-point" style="left:70%;" onclick="focusEvent(2)">
+        <div class="timeline-label">1848</div>
+    </div>
+
+    <div class="timeline-point" style="left:76%;" onclick="focusEvent(3)">
+        <div class="timeline-label">1853</div>
+    </div>
+
+    <div class="timeline-point" style="left:84%;" onclick="focusEvent(4)">
+        <div class="timeline-label">1868</div>
+    </div>
+
+    <div class="year-scale">
+        <span>1600</span>
+        <span>1700</span>
+        <span>1800</span>
+        <span>1900</span>
+        <span>2000</span>
+    </div>
 
 </div>
 
-<!-- MODAL -->
-
-<div id="eventModal"></div>
+<div id="globeViz"></div>
 
 <script src="https://unpkg.com/three"></script>
 <script src="https://unpkg.com/globe.gl"></script>
 
 <script>
 
-/* EVENTS */
-
-const events = [
+const eventsData = [
 
 {
-    year:1839,
-    title:"First Opium War",
-    description:"The First Opium War begins between Britain and Qing China.",
-    lat:31,
-    lng:121
+    title:"1839 — First Opium War",
+    text:"The conflict between Britain and Qing China reshaped East Asian trade and marked the beginning of major global pressure on the region.",
+    lat:22.3,
+    lng:114.2,
+    altitude:1.8,
+    color:"#2de6ff"
 },
 
 {
-    year:1848,
-    title:"California Gold Rush",
-    description:"California Gold Rush accelerates Pacific migration and trade.",
+    title:"1841 — Torishima",
+    text:"After being shipwrecked in the Pacific, John Manjiro survived on Torishima before being rescued by an American whaling ship.",
+    lat:30.48,
+    lng:140.31,
+    altitude:1.6,
+    color:"#ffe066"
+},
+
+{
+    title:"1848 — California Gold Rush",
+    text:"The Gold Rush accelerated migration, maritime trade, and Pacific connections between East Asia and America.",
     lat:37.77,
-    lng:-122.4
+    lng:-122.41,
+    altitude:2.0,
+    color:"#ff9d2f"
 },
 
 {
-    year:1853,
-    title:"Perry Arrives",
-    description:"Commodore Perry arrives in Japan with the Black Ships.",
-    lat:35.68,
-    lng:139.76
+    title:"1853 — Perry Arrives in Japan",
+    text:"Commodore Perry's Black Ships pressured Japan to open its ports to international relations.",
+    lat:35.45,
+    lng:139.64,
+    altitude:1.7,
+    color:"#ff5c5c"
 },
 
 {
-    year:1868,
-    title:"Meiji Restoration",
-    description:"The Meiji Restoration transforms Japan into a modern nation.",
+    title:"1868 — Meiji Restoration",
+    text:"Japan rapidly modernized and entered the industrial global age.",
     lat:35.68,
-    lng:139.76
+    lng:139.76,
+    altitude:1.5,
+    color:"#2dff9f"
 }
 
 ];
 
-/* GLOBE */
-
 const world = Globe()
-(document.getElementById("globeViz"))
+(document.getElementById('globeViz'))
 
-.globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
-.bumpImageUrl("https://unpkg.com/three-globe/example/img/earth-topology.png")
+.globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+.bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
+.backgroundColor('rgba(0,0,0,0)')
 
-.backgroundColor("rgba(0,0,0,0)")
+.atmosphereColor('#33e6ff')
+.atmosphereAltitude(0.16)
 
-.atmosphereColor("#25e7ff")
-.atmosphereAltitude(0.22)
-
-.arcColor(() => "#36e7ff")
-.arcDashLength(0.4)
-.arcDashGap(4)
-.arcDashAnimateTime(2500)
+.pointOfView({
+    lat:20,
+    lng:140,
+    altitude:2.2
+},0)
 
 .arcsData([
 {
-startLat:32.78,
-startLng:132.95,
-endLat:21.30,
-endLng:-157.85
+    startLat:30.48,
+    startLng:140.31,
+    endLat:37.77,
+    endLng:-122.41,
+    color:['#2de6ff','#ffffff'],
 },
 {
-startLat:21.30,
-startLng:-157.85,
-endLat:37.77,
-endLng:-122.4
+    startLat:37.77,
+    startLng:-122.41,
+    endLat:35.45,
+    endLng:139.64,
+    color:['#ffb347','#ff5c5c'],
 }
 ])
 
-.pointsData([
-{
-lat:32.78,
-lng:132.95,
-size:0.4
-},
-{
-lat:21.30,
-lng:-157.85,
-size:0.5
-},
-{
-lat:37.77,
-lng:-122.4,
-size:0.5
-}
-])
+.arcStroke(.9)
+.arcDashLength(.45)
+.arcDashGap(1.2)
+.arcDashAnimateTime(3500)
 
-.pointAltitude("size")
-.pointColor(() => "#36e7ff");
+.pointsData(eventsData)
+.pointAltitude('altitude')
+.pointColor('color')
+.pointRadius(.42)
+.pointResolution(18);
 
 world.controls().autoRotate = true;
-world.controls().autoRotateSpeed = 0.4;
+world.controls().autoRotateSpeed = .45;
 
-/* 初期位置 */
+function focusEvent(index){
 
-world.pointOfView({
-    lat:30,
-    lng:160,
-    altitude:2.2
-});
+    const data = eventsData[index];
 
-/* EVENTS LEFT */
+    document.getElementById("cardTitle").innerHTML = data.title;
+    document.getElementById("cardText").innerHTML = data.text;
 
-const container = document.getElementById("eventsContainer");
+    world.pointOfView({
+        lat:data.lat,
+        lng:data.lng,
+        altitude:data.altitude
+    },1600);
 
-events.forEach((event,index)=>{
-
-    const div = document.createElement("div");
-
-    div.className = "eventItem";
-
-    div.innerHTML = `
-        <div class="eventYear">${event.year}</div>
-        <div class="eventText">${event.description}</div>
-    `;
-
-    div.addEventListener("click",()=>{
-
-        openEventModal(event);
-
-        world.pointOfView({
-            lat:event.lat,
-            lng:event.lng,
-            altitude:1.8
-        },1200);
-
+    /* 左イベント */
+    document.querySelectorAll(".event").forEach((e,i)=>{
+        e.classList.toggle("active", i===index);
     });
 
-    container.appendChild(div);
-
-});
-
-/* TIMELINE MARKERS */
-
-const timeline = document.querySelector(".timeline");
-
-events.forEach((event,index)=>{
-
-    const marker = document.createElement("div");
-
-    marker.className = "marker";
-
-    marker.style.left = (58 + index * 4.5) + "%";
-
-    marker.addEventListener("mouseenter",()=>{
-
-        applyEraAtmosphere(event.year);
-
+    /* 下年代 */
+    document.querySelectorAll(".timeline-point").forEach((e,i)=>{
+        e.classList.toggle("active", i===index);
     });
 
-    marker.addEventListener("click",()=>{
+    /* 時代カラー */
+    const glowColors = [
+        "rgba(0,160,255,.35)",
+        "rgba(255,220,120,.35)",
+        "rgba(255,140,0,.35)",
+        "rgba(255,70,70,.35)",
+        "rgba(0,255,170,.35)"
+    ];
 
-        openEventModal(event);
-
-        world.pointOfView({
-            lat:event.lat,
-            lng:event.lng,
-            altitude:1.8
-        },1200);
-
-    });
-
-    timeline.appendChild(marker);
-
-});
-
-/* ERA COLORS */
-
-function applyEraAtmosphere(year){
-
-    if(year < 1850){
-
-        world.atmosphereColor("#1d8fff");
-
-    }
-
-    else if(year < 1860){
-
-        world.atmosphereColor("#ff9d00");
-
-    }
-
-    else{
-
-        world.atmosphereColor("#25e7ff");
-
-    }
+    document.querySelector(".main-title").style.textShadow =
+        `0 0 12px rgba(255,255,255,.8),
+         0 0 40px ${glowColors[index]}`;
 
 }
 
-/* MODAL */
-
-function openEventModal(event){
-
-    const modal = document.getElementById("eventModal");
-
-    modal.innerHTML = `
-        <div class="modalContent">
-
-            <h2>
-            ${event.year} — ${event.title}
-            </h2>
-
-            <p>
-            ${event.description}
-            </p>
-
-            <button onclick="closeEventModal()">
-            CLOSE
-            </button>
-
-        </div>
-    `;
-
-    modal.style.display = "flex";
-
-}
-
-function closeEventModal(){
-
-    document.getElementById("eventModal").style.display = "none";
-
-}
+/* 初期表示 */
+focusEvent(0);
 
 </script>
 
