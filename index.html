@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GLOBAL HISTORY MAP</title>
+<title>JOHN MANJIRO GLOBAL HISTORY MAP</title>
 
 <style>
 
@@ -14,18 +14,22 @@ margin:0;
 overflow:hidden;
 background:black;
 font-family:Arial,sans-serif;
+color:white;
 }
+
+/* ===== 3D背景 ===== */
 
 canvas{
 display:block;
 }
+
+/* ===== タイトル ===== */
 
 .title{
 position:absolute;
 top:30px;
 width:100%;
 text-align:center;
-color:white;
 z-index:10;
 pointer-events:none;
 }
@@ -40,23 +44,21 @@ text-shadow:0 0 20px rgba(255,255,255,0.8);
 .title p{
 margin-top:10px;
 font-size:12px;
-letter-spacing:10px;
+letter-spacing:8px;
 color:#aaa;
 }
 
+/* ===== タイムライン ===== */
+
 .timeline{
 position:absolute;
-bottom:40px;
+bottom:30px;
 left:50%;
 transform:translateX(-50%);
-
 display:flex;
 align-items:center;
 gap:12px;
-
-color:white;
-z-index:10;
-
+z-index:20;
 font-size:12px;
 letter-spacing:3px;
 }
@@ -71,6 +73,8 @@ background:rgba(255,255,255,0.4);
 opacity:0.8;
 }
 
+/* ===== 都市ラベル ===== */
+
 .label{
 position:absolute;
 color:white;
@@ -81,48 +85,151 @@ pointer-events:none;
 z-index:20;
 }
 
+/* ===== 情報パネル ===== */
+
+.panel{
+position:absolute;
+right:30px;
+top:120px;
+width:320px;
+background:rgba(0,0,0,0.75);
+border:1px solid rgba(255,255,255,0.2);
+padding:20px;
+z-index:30;
+backdrop-filter:blur(10px);
+box-shadow:0 0 20px rgba(0,150,255,0.25);
+}
+
+.panel img{
+width:100%;
+margin-bottom:15px;
+border-radius:6px;
+}
+
+.panel h2{
+margin-top:0;
+font-size:22px;
+letter-spacing:2px;
+}
+
+.panel p{
+font-size:13px;
+line-height:1.8;
+color:#ccc;
+}
+
+.highlight{
+color:#6fdcff;
+}
+
 </style>
 </head>
 
 <body>
 
+<!-- タイトル -->
+
 <div class="title">
-<h1>GLOBAL HISTORY MAP</h1>
-<p>HUMANITY THROUGH TIME</p>
+<h1>JOHN MANJIRO</h1>
+<p>GLOBAL HISTORY MAP</p>
 </div>
+
+<!-- 情報パネル -->
+
+<div class="panel">
+
+<img src="manjiro.jpg">
+
+<h2>JOHN MANJIRO</h2>
+
+<p>
+
+<span class="highlight">
+Nakahama Manjiro
+</span>
+
+was a Japanese fisherman born in
+Tosashimizu during the late Edo period.
+
+After drifting across the Pacific Ocean,
+he was rescued by an American whaling ship.
+
+His life became a bridge between
+Japan and the modern world.
+
+</p>
+
+<p>
+
+This map visualizes:
+
+<br><br>
+
+• Ocean Drift  
+• Whaling Routes  
+• Global Trade  
+• Cultural Exchange  
+• Technology Transfer  
+• The Dawn of Modernization  
+
+</p>
+
+</div>
+
+<!-- タイムライン -->
 
 <div class="timeline">
 
-<div class="year">3000 BC</div>
+<div class="year">1827</div>
 <div class="line"></div>
-<div class="year">0</div>
+
+<div class="year">1841</div>
 <div class="line"></div>
-<div class="year">1000</div>
+
+<div class="year">1843</div>
 <div class="line"></div>
-<div class="year">1500</div>
+
+<div class="year">1851</div>
 <div class="line"></div>
-<div class="year">2025</div>
+
+<div class="year">1860+</div>
 
 </div>
 
-<div id="tokyo" class="label">TOKYO</div>
-<div id="rome" class="label">ROME</div>
-<div id="cairo" class="label">CAIRO</div>
-<div id="beijing" class="label">BEIJING</div>
+<!-- ラベル -->
+
+<div id="tosashimizu" class="label">
+TOSASHIMIZU
+</div>
+
+<div id="torishima" class="label">
+TORISHIMA
+</div>
+
+<div id="hawaii" class="label">
+HAWAII
+</div>
+
+<div id="newbedford" class="label">
+NEW BEDFORD
+</div>
+
+<div id="sanfrancisco" class="label">
+SAN FRANCISCO
+</div>
 
 <script type="module">
 
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js';
+import * as THREE from
+'https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js';
 
 
-
-// シーン
+// ===== シーン =====
 
 const scene = new THREE.Scene();
 
 
-
-// カメラ
+// ===== カメラ =====
 
 const camera = new THREE.PerspectiveCamera(
 60,
@@ -134,8 +241,7 @@ window.innerWidth/window.innerHeight,
 camera.position.z = 5;
 
 
-
-// レンダラー
+// ===== レンダラー =====
 
 const renderer = new THREE.WebGLRenderer({
 antialias:true
@@ -146,19 +252,23 @@ window.innerWidth,
 window.innerHeight
 );
 
-renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setPixelRatio(
+window.devicePixelRatio
+);
 
-document.body.appendChild(renderer.domElement);
+document.body.appendChild(
+renderer.domElement
+);
 
 
+// ===== 星空 =====
 
-// 星空
-
-const starsGeometry = new THREE.BufferGeometry();
+const starsGeometry =
+new THREE.BufferGeometry();
 
 const starVertices = [];
 
-for(let i=0;i<10000;i++){
+for(let i=0;i<12000;i++){
 
 const x = (Math.random()-0.5)*2000;
 const y = (Math.random()-0.5)*2000;
@@ -176,12 +286,14 @@ starVertices,
 )
 );
 
-const starsMaterial = new THREE.PointsMaterial({
+const starsMaterial =
+new THREE.PointsMaterial({
 color:0xffffff,
 size:0.7
 });
 
-const stars = new THREE.Points(
+const stars =
+new THREE.Points(
 starsGeometry,
 starsMaterial
 );
@@ -189,40 +301,35 @@ starsMaterial
 scene.add(stars);
 
 
+// ===== 地球 =====
 
-// 地球テクスチャ
+const textureLoader =
+new THREE.TextureLoader();
 
-const textureLoader = new THREE.TextureLoader();
+const earthTexture =
+textureLoader.load('earth.jpg');
 
-const earthTexture = textureLoader.load(
-'earth.jpg'
-);
-
-
-
-// 地球グループ
-
-const earthGroup = new THREE.Group();
+const earthGroup =
+new THREE.Group();
 
 scene.add(earthGroup);
 
-
-
-// 地球
-
-const earthGeometry = new THREE.SphereGeometry(
+const earthGeometry =
+new THREE.SphereGeometry(
 2,
 64,
 64
 );
 
-const earthMaterial = new THREE.MeshStandardMaterial({
+const earthMaterial =
+new THREE.MeshStandardMaterial({
 map:earthTexture,
 metalness:0.1,
 roughness:0.8
 });
 
-const earth = new THREE.Mesh(
+const earth =
+new THREE.Mesh(
 earthGeometry,
 earthMaterial
 );
@@ -230,22 +337,24 @@ earthMaterial
 earthGroup.add(earth);
 
 
+// ===== 発光 =====
 
-// 発光
-
-const glowGeometry = new THREE.SphereGeometry(
+const glowGeometry =
+new THREE.SphereGeometry(
 2.15,
 64,
 64
 );
 
-const glowMaterial = new THREE.MeshBasicMaterial({
+const glowMaterial =
+new THREE.MeshBasicMaterial({
 color:0x3399ff,
 transparent:true,
 opacity:0.18
 });
 
-const glow = new THREE.Mesh(
+const glow =
+new THREE.Mesh(
 glowGeometry,
 glowMaterial
 );
@@ -253,10 +362,10 @@ glowMaterial
 earthGroup.add(glow);
 
 
+// ===== 光 =====
 
-// 光
-
-const light = new THREE.PointLight(
+const light =
+new THREE.PointLight(
 0xffffff,
 8
 );
@@ -265,7 +374,8 @@ light.position.set(5,3,5);
 
 scene.add(light);
 
-const ambientLight = new THREE.AmbientLight(
+const ambientLight =
+new THREE.AmbientLight(
 0xffffff,
 2
 );
@@ -273,23 +383,26 @@ const ambientLight = new THREE.AmbientLight(
 scene.add(ambientLight);
 
 
-
-// 文明ノード
+// ===== ノード =====
 
 function createNode(lat,lon,color){
 
-const nodeGeometry =
-new THREE.SphereGeometry(0.04,16,16);
+const geometry =
+new THREE.SphereGeometry(
+0.045,
+16,
+16
+);
 
-const nodeMaterial =
+const material =
 new THREE.MeshBasicMaterial({
 color:color
 });
 
 const node =
 new THREE.Mesh(
-nodeGeometry,
-nodeMaterial
+geometry,
+material
 );
 
 const phi =
@@ -316,42 +429,68 @@ return node;
 }
 
 
+// ===== 万次郎ルート =====
 
-const tokyoNode =
-createNode(35.6762,139.6503,0x00ffff);
+const tosashimizuNode =
+createNode(
+32.7800,
+132.9500,
+0x00ffff
+);
 
-const romeNode =
-createNode(41.9028,12.4964,0xffaa00);
+const torishimaNode =
+createNode(
+30.4840,
+140.3030,
+0xffaa00
+);
 
-const cairoNode =
-createNode(30.0444,31.2357,0xff0000);
+const hawaiiNode =
+createNode(
+21.3069,
+-157.8583,
+0xff0000
+);
 
-const beijingNode =
-createNode(39.9042,116.4074,0x00ff66);
+const newbedfordNode =
+createNode(
+41.6362,
+-70.9342,
+0x00ff66
+);
 
-
-
-// ラベル
-
-const tokyoLabel =
-document.getElementById('tokyo');
-
-const romeLabel =
-document.getElementById('rome');
-
-const cairoLabel =
-document.getElementById('cairo');
-
-const beijingLabel =
-document.getElementById('beijing');
-
+const sanfranciscoNode =
+createNode(
+37.7749,
+-122.4194,
+0xffff00
+);
 
 
-// ラベル位置更新
+// ===== ラベル =====
+
+const tosashimizuLabel =
+document.getElementById('tosashimizu');
+
+const torishimaLabel =
+document.getElementById('torishima');
+
+const hawaiiLabel =
+document.getElementById('hawaii');
+
+const newbedfordLabel =
+document.getElementById('newbedford');
+
+const sanfranciscoLabel =
+document.getElementById('sanfrancisco');
+
+
+// ===== ラベル更新 =====
 
 function updateLabel(node,label){
 
-const vector = node.position.clone();
+const vector =
+node.position.clone();
 
 vector.applyMatrix4(
 earthGroup.matrixWorld
@@ -360,22 +499,20 @@ earthGroup.matrixWorld
 vector.project(camera);
 
 const x =
-(vector.x * 0.5 + 0.5)
+(vector.x*0.5+0.5)
 * window.innerWidth;
 
 const y =
-(-vector.y * 0.5 + 0.5)
+(-vector.y*0.5+0.5)
 * window.innerHeight;
 
 label.style.left = `${x}px`;
-
 label.style.top = `${y}px`;
 
 }
 
 
-
-// マウス回転
+// ===== マウス操作 =====
 
 let isDragging = false;
 
@@ -405,8 +542,8 @@ renderer.domElement.addEventListener(
 if(isDragging){
 
 const deltaMove = {
-x:event.offsetX - previousMousePosition.x,
-y:event.offsetY - previousMousePosition.y
+x:event.offsetX -
+previousMousePosition.x
 };
 
 earthGroup.rotation.y +=
@@ -423,8 +560,7 @@ y:event.offsetY
 );
 
 
-
-// アニメーション
+// ===== アニメーション =====
 
 function animate(){
 
@@ -433,27 +569,32 @@ requestAnimationFrame(animate);
 earthGroup.rotation.y += 0.0015;
 
 
+// ラベル追従
 
 updateLabel(
-tokyoNode,
-tokyoLabel
+tosashimizuNode,
+tosashimizuLabel
 );
 
 updateLabel(
-romeNode,
-romeLabel
+torishimaNode,
+torishimaLabel
 );
 
 updateLabel(
-cairoNode,
-cairoLabel
+hawaiiNode,
+hawaiiLabel
 );
 
 updateLabel(
-beijingNode,
-beijingLabel
+newbedfordNode,
+newbedfordLabel
 );
 
+updateLabel(
+sanfranciscoNode,
+sanfranciscoLabel
+);
 
 
 renderer.render(
@@ -466,8 +607,7 @@ camera
 animate();
 
 
-
-// リサイズ対応
+// ===== リサイズ =====
 
 window.addEventListener(
 'resize',
