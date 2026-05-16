@@ -38,7 +38,7 @@ pointer-events:none;
 margin:0;
 font-size:44px;
 letter-spacing:8px;
-text-shadow:0 0 25px rgba(255,255,255,0.9);
+text-shadow:0 0 25px rgba(255,255,255,0.95);
 }
 
 .title p{
@@ -49,7 +49,7 @@ color:#7fe7ff;
 }
 
 /* =========================
-SIDE PANEL
+PANEL
 ========================= */
 
 .panel{
@@ -217,7 +217,7 @@ JOHN MANJIRO
 </div>
 
 <!-- =========================
-SIDE PANEL
+PANEL
 ========================= -->
 
 <div class="panel">
@@ -236,7 +236,7 @@ NIKOLA TESLA
 
 <img
 id="portrait"
-src="john-manjiro-portrait.jpg"
+src="john-manjiro-portrait.png"
 >
 
 <h2 id="characterName">
@@ -324,8 +324,7 @@ window.devicePixelRatio
 );
 
 document.body.appendChild(
-renderer.domElement
-);
+renderer.domElement);
 
 /* =========================
 STARS
@@ -425,7 +424,7 @@ const glowMaterial =
 new THREE.MeshBasicMaterial({
 color:0x33bbff,
 transparent:true,
-opacity:0.16
+opacity:0.15
 });
 
 const glow =
@@ -459,7 +458,7 @@ new THREE.AmbientLight(
 scene.add(ambientLight);
 
 /* =========================
-DATA
+CHARACTER DATA
 ========================= */
 
 const characters = {
@@ -471,7 +470,7 @@ name:'JOHN MANJIRO',
 life:'1827 — 1898',
 
 portrait:
-'john-manjiro-portrait.jpg',
+'john-manjiro-portrait.png',
 
 description:
 'Nakahama Manjiro connected Japan and America during the dawn of globalization.',
@@ -502,19 +501,19 @@ lon:140.30
 {
 name:'HAWAII',
 lat:21.30,
-lon:-157.85
+lon:202.15
 },
 
 {
 name:'NEW BEDFORD',
 lat:41.63,
-lon:-70.93
+lon:289.07
 },
 
 {
 name:'SAN FRANCISCO',
 lat:37.77,
-lon:-122.41
+lon:237.59
 }
 
 ]
@@ -528,7 +527,7 @@ name:'NIKOLA TESLA',
 life:'1856 — 1943',
 
 portrait:
-'nikola-tesla-portrait.jpg',
+'nikola-tesla-portrait.png',
 
 description:
 'Tesla transformed modern civilization through electricity, wireless communication, and visionary engineering.',
@@ -612,10 +611,10 @@ const phi =
 (90-lat)*(Math.PI/180);
 
 const theta =
-(lon+180)*(Math.PI/180);
+(lon)*(Math.PI/180);
 
 const x =
--(radius*Math.sin(phi)*Math.cos(theta));
+radius*Math.sin(phi)*Math.cos(theta);
 
 const y =
 radius*Math.cos(phi);
@@ -628,7 +627,7 @@ return new THREE.Vector3(x,y,z);
 }
 
 /* =========================
-OBJECT STORAGE
+STORAGE
 ========================= */
 
 let nodes = [];
@@ -662,7 +661,7 @@ routeMeshes = [];
 }
 
 /* =========================
-CREATE GLOW ROUTE
+CREATE ROUTE
 ========================= */
 
 function createRoute(start,end,color){
@@ -672,7 +671,8 @@ start.clone()
 .add(end)
 .multiplyScalar(0.5);
 
-mid.normalize().multiplyScalar(2.45);
+mid.normalize()
+.multiplyScalar(2.55);
 
 const curve =
 new THREE.QuadraticBezierCurve3(
@@ -684,8 +684,8 @@ end
 const geometry =
 new THREE.TubeGeometry(
 curve,
-64,
-0.01,
+80,
+0.012,
 8,
 false
 );
@@ -694,7 +694,7 @@ const material =
 new THREE.MeshBasicMaterial({
 color:color,
 transparent:true,
-opacity:0.9
+opacity:0.95
 });
 
 const tube =
@@ -752,9 +752,11 @@ tagsContainer.appendChild(div);
 
 });
 
-/* ===== NODES ===== */
+/* ===== POSITIONS ===== */
 
 const positions = [];
+
+/* ===== CREATE NODES ===== */
 
 data.locations.forEach(location=>{
 
@@ -766,6 +768,8 @@ location.lon,
 );
 
 positions.push(position);
+
+/* ===== NODE ===== */
 
 const geometry =
 new THREE.SphereGeometry(
@@ -881,6 +885,8 @@ label.style.left =
 
 label.style.top =
 `${y}px`;
+
+/* ===== HIDE BACKSIDE ===== */
 
 const cameraDirection =
 camera.position.clone()
