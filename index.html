@@ -562,5 +562,173 @@ function closePopup(){
 
 </body>
 </html>
+```
+
+## 重要
+
+GitHub の `index.html` を開いて、内容を全部削除してから、このコードを丸ごと貼り付けてください。
 
 その後、右上の `Commit changes...` を押せば反映されます。
+
+---
+
+# GLOBAL HISTORY MAP — CINEMATIC ATMOSPHERE UPGRADE
+
+以下の改良版コードを追加してください。
+
+## 追加改善内容
+
+* タイトル縮小
+* 地球発光の調整
+* 自動ゆっくり回転
+* 時代による地球カラー変更
+* 年代バー簡素化
+* ポップアップHUD化
+* UI余白調整
+* 世界イベント連動強化
+
+```html
+<style>
+.title{
+  font-size:4vw;
+  letter-spacing:.14em;
+  text-shadow:
+    0 0 8px rgba(255,255,255,.8),
+    0 0 18px rgba(255,255,255,.6),
+    0 0 30px rgba(255,255,255,.35);
+}
+
+.person-name{
+  font-size:58px;
+  line-height:.95;
+}
+
+.timeline-event-label{
+  display:none;
+}
+
+#eventPopup{
+  position:absolute;
+  bottom:120px;
+  right:420px;
+  width:320px;
+  background:rgba(0,0,0,.78);
+  border:1px solid rgba(0,217,255,.3);
+  backdrop-filter:blur(12px);
+  padding:26px;
+  z-index:20;
+  box-shadow:0 0 30px rgba(0,217,255,.15);
+}
+
+#eventPopup h2{
+  color:#35e7ff;
+  margin-bottom:16px;
+  font-size:36px;
+}
+
+#eventPopup p{
+  line-height:1.8;
+  color:#f0f0f0;
+}
+
+#eventPopup button{
+  margin-top:18px;
+  background:#18e7ff;
+  border:none;
+  padding:12px 20px;
+  cursor:pointer;
+  font-weight:bold;
+}
+</style>
+
+<script>
+
+// ===== CINEMATIC GLOBE SETTINGS =====
+
+globe.controls().autoRotate = true;
+globe.controls().autoRotateSpeed = 0.28;
+
+globe.pointOfView({
+  lat:20,
+  lng:160,
+  altitude:2.4
+});
+
+globe.atmosphereColor('#00d9ff');
+globe.atmosphereAltitude(0.12);
+
+// ===== ERA ATMOSPHERE SYSTEM =====
+
+function applyEraAtmosphere(year){
+
+  const material = globe.globeMaterial();
+
+  // 江戸末期〜開国
+  if(year < 1868){
+
+    globe.atmosphereColor('#00d9ff');
+    globe.atmosphereAltitude(0.12);
+
+    material.emissive.set('#021826');
+    material.emissiveIntensity = 0.45;
+  }
+
+  // 明治 industrial blue-white
+  else if(year >= 1868 && year < 1910){
+
+    globe.atmosphereColor('#9fe8ff');
+    globe.atmosphereAltitude(0.15);
+
+    material.emissive.set('#173042');
+    material.emissiveIntensity = 0.65;
+  }
+
+  // 戦争期
+  else if(year >= 1910 && year < 1950){
+
+    globe.atmosphereColor('#ff8844');
+    globe.atmosphereAltitude(0.10);
+
+    material.emissive.set('#2a0909');
+    material.emissiveIntensity = 0.5;
+  }
+
+  // 情報時代
+  else {
+
+    globe.atmosphereColor('#a855ff');
+    globe.atmosphereAltitude(0.16);
+
+    material.emissive.set('#130b24');
+    material.emissiveIntensity = 0.75;
+  }
+}
+
+// ===== EVENT INTERACTION =====
+
+function focusEvent(eventData){
+
+  globe.pointOfView({
+    lat:eventData.lat,
+    lng:eventData.lng,
+    altitude:1.9
+  },1800);
+
+  applyEraAtmosphere(eventData.year);
+
+  const popup = document.getElementById('eventPopup');
+
+  popup.innerHTML = `
+    <h2>${eventData.year} — ${eventData.title}</h2>
+    <p>${eventData.description}</p>
+    <button onclick="closePopup()">CLOSE</button>
+  `;
+
+  popup.style.display = 'block';
+}
+
+function closePopup(){
+  document.getElementById('eventPopup').style.display='none';
+}
+
+</script>
