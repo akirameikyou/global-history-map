@@ -21,14 +21,16 @@ canvas{
 display:block;
 }
 
-/* ===== Title ===== */
+/* =========================
+TITLE
+========================= */
 
 .title{
 position:absolute;
 top:30px;
 width:100%;
 text-align:center;
-z-index:10;
+z-index:20;
 pointer-events:none;
 }
 
@@ -36,27 +38,128 @@ pointer-events:none;
 margin:0;
 font-size:44px;
 letter-spacing:8px;
-text-shadow:0 0 25px rgba(255,255,255,0.85);
+text-shadow:0 0 25px rgba(255,255,255,0.9);
 }
 
 .title p{
-margin-top:12px;
+margin-top:10px;
 font-size:13px;
 letter-spacing:10px;
 color:#7fe7ff;
 }
 
-/* ===== Timeline ===== */
+/* =========================
+PANEL
+========================= */
+
+.panel{
+position:absolute;
+right:30px;
+top:110px;
+width:340px;
+
+background:rgba(0,0,0,0.72);
+
+border:1px solid rgba(255,255,255,0.15);
+
+padding:20px;
+
+z-index:30;
+
+backdrop-filter:blur(10px);
+
+box-shadow:
+0 0 30px rgba(0,150,255,0.2);
+}
+
+.panel img{
+width:100%;
+border-radius:12px;
+margin-bottom:15px;
+}
+
+.panel h2{
+margin:0;
+font-size:24px;
+letter-spacing:2px;
+}
+
+.life{
+margin-top:8px;
+margin-bottom:18px;
+
+font-size:12px;
+letter-spacing:4px;
+
+color:#7fe7ff;
+opacity:0.85;
+}
+
+.panel p{
+font-size:13px;
+line-height:1.8;
+color:#ccc;
+}
+
+select{
+width:100%;
+margin-bottom:20px;
+
+background:black;
+color:white;
+
+border:1px solid rgba(255,255,255,0.2);
+
+padding:12px;
+}
+
+/* =========================
+TAGS
+========================= */
+
+.tags{
+margin-top:20px;
+
+display:flex;
+flex-wrap:wrap;
+
+gap:8px;
+}
+
+.tag{
+padding:6px 10px;
+
+font-size:11px;
+letter-spacing:1px;
+
+border:
+1px solid rgba(0,200,255,0.4);
+
+color:#7fe7ff;
+
+background:
+rgba(0,120,255,0.08);
+}
+
+/* =========================
+TIMELINE
+========================= */
 
 .timeline{
 position:absolute;
+
 bottom:30px;
 left:50%;
+
 transform:translateX(-50%);
+
 display:flex;
 align-items:center;
+
 gap:12px;
+
 z-index:20;
+
 font-size:12px;
 letter-spacing:3px;
 }
@@ -64,92 +167,33 @@ letter-spacing:3px;
 .line{
 width:80px;
 height:1px;
-background:rgba(255,255,255,0.4);
+
+background:
+rgba(255,255,255,0.35);
 }
 
-/* ===== Labels ===== */
+/* =========================
+LABELS
+========================= */
 
 .label{
 position:absolute;
-color:white;
+
 font-size:12px;
 letter-spacing:2px;
-text-shadow:0 0 12px rgba(255,255,255,0.9);
+
+color:white;
+
+text-shadow:
+0 0 12px rgba(255,255,255,0.9);
+
 pointer-events:none;
-z-index:20;
-transition:opacity 0.3s;
+
+z-index:25;
+
 white-space:nowrap;
-}
 
-/* ===== Panel ===== */
-
-.panel{
-position:absolute;
-right:30px;
-top:110px;
-width:340px;
-background:rgba(0,0,0,0.72);
-border:1px solid rgba(255,255,255,0.15);
-padding:20px;
-z-index:30;
-backdrop-filter:blur(12px);
-box-shadow:0 0 30px rgba(0,150,255,0.2);
-}
-
-.panel img{
-width:100%;
-border-radius:10px;
-margin-bottom:15px;
-}
-
-.panel h2{
-margin-top:0;
-font-size:24px;
-letter-spacing:2px;
-}
-
-.life{
-margin-top:-8px;
-margin-bottom:16px;
-font-size:12px;
-letter-spacing:4px;
-color:#7fe7ff;
-opacity:0.8;
-}
-
-.panel p{
-font-size:13px;
-line-height:1.9;
-color:#ccc;
-}
-
-/* ===== Select ===== */
-
-select{
-margin-top:15px;
-width:100%;
-background:black;
-color:white;
-border:1px solid rgba(255,255,255,0.2);
-padding:10px;
-}
-
-/* ===== Tags ===== */
-
-.tags{
-margin-top:20px;
-display:flex;
-flex-wrap:wrap;
-gap:8px;
-}
-
-.tag{
-border:1px solid rgba(0,200,255,0.4);
-padding:6px 10px;
-font-size:11px;
-letter-spacing:1px;
-color:#7fe7ff;
-background:rgba(0,120,255,0.08);
+transition:opacity 0.3s;
 }
 
 </style>
@@ -157,21 +201,25 @@ background:rgba(0,120,255,0.08);
 
 <body>
 
-<!-- ===== Title ===== -->
+<!-- =========================
+TITLE
+========================= -->
 
 <div class="title">
+
 <h1>GLOBAL HISTORY MAP</h1>
-<p id="subtitle">JOHN MANJIRO</p>
+
+<p id="subtitle">
+JOHN MANJIRO
+</p>
+
 </div>
 
-<!-- ===== Panel ===== -->
+<!-- =========================
+PANEL
+========================= -->
 
 <div class="panel">
-
-<img
-id="portrait"
-src="john-manjiro-portrait.png"
->
 
 <select id="characterSelect">
 
@@ -185,6 +233,11 @@ NIKOLA TESLA
 
 </select>
 
+<img
+id="portrait"
+src="john-manjiro-portrait.png"
+>
+
 <h2 id="characterName">
 JOHN MANJIRO
 </h2>
@@ -195,83 +248,63 @@ JOHN MANJIRO
 
 <p id="description">
 
-Nakahama Manjiro was born in Tosashimizu
-during the late Edo period.
-
-After drifting across the Pacific Ocean,
-he was rescued by an American whaling ship
-and became a bridge between Japan and
-the modern world.
+Nakahama Manjiro connected Japan and
+America during the dawn of globalization.
 
 </p>
 
-<div class="tags" id="tags">
-
-<div class="tag">PACIFIC</div>
-<div class="tag">GLOBALIZATION</div>
-<div class="tag">NAVIGATION</div>
-<div class="tag">MODERNIZATION</div>
-
+<div
+class="tags"
+id="tags">
 </div>
 
 </div>
 
-<!-- ===== Timeline ===== -->
+<!-- =========================
+TIMELINE
+========================= -->
 
 <div class="timeline">
 
-<div>1827</div>
+<div>1800</div>
+
 <div class="line"></div>
 
-<div>1841</div>
+<div>1850</div>
+
 <div class="line"></div>
 
-<div>1843</div>
+<div>1900</div>
+
 <div class="line"></div>
 
-<div>1851</div>
-<div class="line"></div>
-
-<div>1898</div>
+<div>1950</div>
 
 </div>
 
-<!-- ===== Labels ===== -->
+<!-- =========================
+LABELS CONTAINER
+========================= -->
 
-<div id="tosashimizu" class="label">
-TOSASHIMIZU
-</div>
-
-<div id="torishima" class="label">
-TORISHIMA
-</div>
-
-<div id="hawaii" class="label">
-HAWAII
-</div>
-
-<div id="newbedford" class="label">
-NEW BEDFORD
-</div>
-
-<div id="sanfrancisco" class="label">
-SAN FRANCISCO
-</div>
+<div id="labelsContainer"></div>
 
 <script type="module">
 
 import * as THREE from
 'https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js';
 
-
-// ===== Scene =====
+/* =========================
+SCENE
+========================= */
 
 const scene = new THREE.Scene();
 
+/* =========================
+CAMERA
+========================= */
 
-// ===== Camera =====
-
-const camera = new THREE.PerspectiveCamera(
+const camera =
+new THREE.PerspectiveCamera(
 60,
 window.innerWidth/window.innerHeight,
 0.1,
@@ -280,10 +313,12 @@ window.innerWidth/window.innerHeight,
 
 camera.position.z = 5;
 
+/* =========================
+RENDERER
+========================= */
 
-// ===== Renderer =====
-
-const renderer = new THREE.WebGLRenderer({
+const renderer =
+new THREE.WebGLRenderer({
 antialias:true
 });
 
@@ -297,10 +332,12 @@ window.devicePixelRatio
 );
 
 document.body.appendChild(
-renderer.domElement);
+renderer.domElement
+);
 
-
-// ===== Stars =====
+/* =========================
+STARS
+========================= */
 
 const starsGeometry =
 new THREE.BufferGeometry();
@@ -309,9 +346,14 @@ const starVertices = [];
 
 for(let i=0;i<15000;i++){
 
-const x = (Math.random()-0.5)*2500;
-const y = (Math.random()-0.5)*2500;
-const z = (Math.random()-0.5)*2500;
+const x =
+(Math.random()-0.5)*2500;
+
+const y =
+(Math.random()-0.5)*2500;
+
+const z =
+(Math.random()-0.5)*2500;
 
 starVertices.push(x,y,z);
 
@@ -339,8 +381,9 @@ starsMaterial
 
 scene.add(stars);
 
-
-// ===== Earth =====
+/* =========================
+EARTH
+========================= */
 
 const textureLoader =
 new THREE.TextureLoader();
@@ -375,8 +418,9 @@ earthMaterial
 
 earthGroup.add(earth);
 
-
-// ===== Glow =====
+/* =========================
+GLOW
+========================= */
 
 const glowGeometry =
 new THREE.SphereGeometry(
@@ -389,7 +433,7 @@ const glowMaterial =
 new THREE.MeshBasicMaterial({
 color:0x33bbff,
 transparent:true,
-opacity:0.18
+opacity:0.16
 });
 
 const glow =
@@ -400,8 +444,9 @@ glowMaterial
 
 earthGroup.add(glow);
 
-
-// ===== Lights =====
+/* =========================
+LIGHTS
+========================= */
 
 const light =
 new THREE.PointLight(
@@ -421,13 +466,156 @@ new THREE.AmbientLight(
 
 scene.add(ambientLight);
 
+/* =========================
+DATA
+========================= */
 
-// ===== Labels =====
+const characters = {
 
-const labels = [];
+manjiro:{
 
+name:'JOHN MANJIRO',
 
-// ===== Convert LatLon =====
+life:'1827 — 1898',
+
+portrait:
+'john-manjiro-portrait.png',
+
+description:
+'Nakahama Manjiro connected Japan and America during the dawn of globalization.',
+
+tags:[
+'PACIFIC',
+'NAVIGATION',
+'GLOBALIZATION',
+'MODERNIZATION'
+],
+
+color:0x00ffff,
+
+locations:[
+
+{
+name:'TOSASHIMIZU',
+lat:32.78,
+lon:132.95
+},
+
+{
+name:'TORISHIMA',
+lat:30.48,
+lon:140.30
+},
+
+{
+name:'HAWAII',
+lat:21.30,
+lon:-157.85
+},
+
+{
+name:'NEW BEDFORD',
+lat:41.63,
+lon:-70.93
+},
+
+{
+name:'SAN FRANCISCO',
+lat:37.77,
+lon:-122.41
+}
+
+]
+
+},
+
+tesla:{
+
+name:'NIKOLA TESLA',
+
+life:'1856 — 1943',
+
+portrait:
+'nikola-tesla-portrait.png',
+
+description:
+'Tesla transformed modern civilization through electricity, wireless communication, and visionary engineering.',
+
+tags:[
+'ELECTRICITY',
+'WIRELESS',
+'ENERGY',
+'SCIENCE'
+],
+
+color:0xaa66ff,
+
+locations:[
+
+{
+name:'SMILJAN',
+lat:44.56,
+lon:15.37
+},
+
+{
+name:'GRAZ',
+lat:47.07,
+lon:15.43
+},
+
+{
+name:'PARIS',
+lat:48.85,
+lon:2.35
+},
+
+{
+name:'NEW YORK',
+lat:40.71,
+lon:-74.00
+},
+
+{
+name:'COLORADO',
+lat:38.83,
+lon:-104.82
+}
+
+]
+
+}
+
+};
+
+/* =========================
+HTML REFERENCES
+========================= */
+
+const subtitle =
+document.getElementById('subtitle');
+
+const portrait =
+document.getElementById('portrait');
+
+const characterName =
+document.getElementById('characterName');
+
+const lifeDates =
+document.getElementById('lifeDates');
+
+const description =
+document.getElementById('description');
+
+const tagsContainer =
+document.getElementById('tags');
+
+const labelsContainer =
+document.getElementById('labelsContainer');
+
+/* =========================
+HELPERS
+========================= */
 
 function latLonToVector3(lat,lon,radius){
 
@@ -450,13 +638,95 @@ return new THREE.Vector3(x,y,z);
 
 }
 
+/* =========================
+CURRENT OBJECTS
+========================= */
 
-// ===== Create Node =====
+let nodes = [];
+let labels = [];
+let routeLine = null;
 
-function createNode(lat,lon,color,labelId){
+/* =========================
+CLEAR
+========================= */
+
+function clearScene(){
+
+nodes.forEach(node=>{
+earthGroup.remove(node);
+});
+
+nodes = [];
+
+labels.forEach(label=>{
+label.remove();
+});
+
+labels = [];
+
+if(routeLine){
+earthGroup.remove(routeLine);
+}
+
+}
+
+/* =========================
+LOAD CHARACTER
+========================= */
+
+function loadCharacter(key){
+
+clearScene();
+
+const data =
+characters[key];
+
+subtitle.innerText =
+data.name;
+
+portrait.src =
+data.portrait;
+
+characterName.innerText =
+data.name;
+
+lifeDates.innerText =
+data.life;
+
+description.innerText =
+data.description;
+
+/* ===== TAGS ===== */
+
+tagsContainer.innerHTML = '';
+
+data.tags.forEach(tag=>{
+
+const div =
+document.createElement('div');
+
+div.className = 'tag';
+
+div.innerText = tag;
+
+tagsContainer.appendChild(div);
+
+});
+
+/* ===== NODES ===== */
+
+const routePoints = [];
+
+data.locations.forEach(location=>{
 
 const position =
-latLonToVector3(lat,lon,2.08);
+latLonToVector3(
+location.lat,
+location.lon,
+2.05
+);
+
+routePoints.push(position);
 
 const geometry =
 new THREE.SphereGeometry(
@@ -467,7 +737,7 @@ new THREE.SphereGeometry(
 
 const material =
 new THREE.MeshBasicMaterial({
-color:color
+color:data.color
 });
 
 const node =
@@ -480,70 +750,34 @@ node.position.copy(position);
 
 earthGroup.add(node);
 
-labels.push({
-node:node,
-label:document.getElementById(labelId)
+nodes.push(node);
+
+/* ===== LABEL ===== */
+
+const label =
+document.createElement('div');
+
+label.className = 'label';
+
+label.innerText =
+location.name;
+
+document.body.appendChild(label);
+
+labels.push(label);
+
+label.userData = {
+node:node
+};
+
 });
 
-return position;
-
-}
-
-
-// ===== Nodes =====
-
-const routePoints = [];
-
-routePoints.push(
-createNode(
-32.7800,
-132.9500,
-0x00ffff,
-'tosashimizu'
-)
-);
-
-routePoints.push(
-createNode(
-30.4840,
-140.3030,
-0xffaa00,
-'torishima'
-)
-);
-
-routePoints.push(
-createNode(
-21.3069,
--157.8583,
-0xff4444,
-'hawaii'
-)
-);
-
-routePoints.push(
-createNode(
-41.6362,
--70.9342,
-0x00ff88,
-'newbedford'
-)
-);
-
-routePoints.push(
-createNode(
-37.7749,
--122.4194,
-0xffff00,
-'sanfrancisco'
-)
-);
-
-
-// ===== Curved Route =====
+/* ===== ROUTE ===== */
 
 const curve =
-new THREE.CatmullRomCurve3(routePoints);
+new THREE.CatmullRomCurve3(
+routePoints
+);
 
 const curvePoints =
 curve.getPoints(300);
@@ -552,7 +786,7 @@ for(let i=0;i<curvePoints.length;i++){
 
 curvePoints[i]
 .normalize()
-.multiplyScalar(2.3);
+.multiplyScalar(2.08);
 
 }
 
@@ -562,12 +796,12 @@ new THREE.BufferGeometry()
 
 const routeMaterial =
 new THREE.LineBasicMaterial({
-color:0x00ffff,
+color:data.color,
 transparent:true,
 opacity:1
 });
 
-const routeLine =
+routeLine =
 new THREE.Line(
 routeGeometry,
 routeMaterial
@@ -575,20 +809,50 @@ routeMaterial
 
 earthGroup.add(routeLine);
 
+}
 
-// ===== Update Labels =====
+/* =========================
+INITIAL LOAD
+========================= */
+
+loadCharacter('manjiro');
+
+/* =========================
+CHARACTER SWITCH
+========================= */
+
+document
+.getElementById('characterSelect')
+.addEventListener(
+'change',
+(event)=>{
+
+loadCharacter(
+event.target.value
+);
+
+}
+);
+
+/* =========================
+LABEL UPDATE
+========================= */
 
 function updateLabels(){
 
-labels.forEach(item=>{
+labels.forEach(label=>{
+
+const node =
+label.userData.node;
 
 const worldPosition =
-item.node.getWorldPosition(
+node.getWorldPosition(
 new THREE.Vector3()
 );
 
 const projected =
-worldPosition.clone().project(camera);
+worldPosition.clone()
+.project(camera);
 
 const x =
 (projected.x*0.5+0.5)
@@ -598,28 +862,32 @@ const y =
 (-projected.y*0.5+0.5)
 * window.innerHeight;
 
-item.label.style.left =
+label.style.left =
 `${x}px`;
 
-item.label.style.top =
+label.style.top =
 `${y}px`;
 
 const cameraDirection =
-camera.position.clone().normalize();
+camera.position.clone()
+.normalize();
 
 const nodeDirection =
-worldPosition.clone().normalize();
+worldPosition.clone()
+.normalize();
 
 const dot =
-cameraDirection.dot(nodeDirection);
+cameraDirection.dot(
+nodeDirection
+);
 
 if(dot < 0){
 
-item.label.style.opacity = 0;
+label.style.opacity = 0;
 
 }else{
 
-item.label.style.opacity = 1;
+label.style.opacity = 1;
 
 }
 
@@ -627,8 +895,9 @@ item.label.style.opacity = 1;
 
 }
 
-
-// ===== Mouse Rotation =====
+/* =========================
+MOUSE ROTATION
+========================= */
 
 let isDragging = false;
 
@@ -637,21 +906,24 @@ x:0,
 y:0
 };
 
-renderer.domElement.addEventListener(
+renderer.domElement
+.addEventListener(
 'mousedown',
 ()=>{
 isDragging = true;
 }
 );
 
-renderer.domElement.addEventListener(
+renderer.domElement
+.addEventListener(
 'mouseup',
 ()=>{
 isDragging = false;
 }
 );
 
-renderer.domElement.addEventListener(
+renderer.domElement
+.addEventListener(
 'mousemove',
 (event)=>{
 
@@ -675,82 +947,21 @@ y:event.offsetY
 }
 );
 
-
-// ===== Character Switch =====
-
-const characterSelect =
-document.getElementById('characterSelect');
-
-const subtitle =
-document.getElementById('subtitle');
-
-const portrait =
-document.getElementById('portrait');
-
-const characterName =
-document.getElementById('characterName');
-
-const lifeDates =
-document.getElementById('lifeDates');
-
-const description =
-document.getElementById('description');
-
-characterSelect.addEventListener(
-'change',
-(event)=>{
-
-if(event.target.value === 'tesla'){
-
-subtitle.innerText =
-'NIKOLA TESLA';
-
-characterName.innerText =
-'NIKOLA TESLA';
-
-lifeDates.innerText =
-'1856 — 1943';
-
-portrait.src =
-'nikola-tesla-portrait.jpg';
-
-description.innerText =
-'Nikola Tesla was a visionary inventor who transformed modern civilization through alternating current, wireless concepts, and electrical engineering innovations.';
-
-}
-
-if(event.target.value === 'manjiro'){
-
-subtitle.innerText =
-'JOHN MANJIRO';
-
-characterName.innerText =
-'JOHN MANJIRO';
-
-lifeDates.innerText =
-'1827 — 1898';
-
-portrait.src =
-'john-manjiro-portrait.png';
-
-description.innerText =
-'Nakahama Manjiro was born in Tosashimizu during the late Edo period. After drifting across the Pacific Ocean, he became a bridge between Japan and the modern world.';
-
-}
-
-}
-);
-
-
-// ===== Animation =====
+/* =========================
+ANIMATION
+========================= */
 
 function animate(){
 
-requestAnimationFrame(animate);
+requestAnimationFrame(
+animate
+);
 
-earthGroup.rotation.y += 0.0012;
+earthGroup.rotation.y +=
+0.0012;
 
-stars.rotation.y += 0.00015;
+stars.rotation.y +=
+0.00015;
 
 updateLabels();
 
@@ -763,15 +974,17 @@ camera
 
 animate();
 
-
-// ===== Resize =====
+/* =========================
+RESIZE
+========================= */
 
 window.addEventListener(
 'resize',
 ()=>{
 
 camera.aspect =
-window.innerWidth/window.innerHeight;
+window.innerWidth/
+window.innerHeight;
 
 camera.updateProjectionMatrix();
 
