@@ -235,7 +235,7 @@ NIKOLA TESLA
 
 <img
 id="portrait"
-src="john-manjiro-portrait.png"
+src="john-manjiro-portrait.jpg"
 >
 
 <h2 id="characterName">
@@ -281,12 +281,6 @@ TIMELINE
 <div>1950</div>
 
 </div>
-
-<!-- =========================
-LABELS CONTAINER
-========================= -->
-
-<div id="labelsContainer"></div>
 
 <script type="module">
 
@@ -479,7 +473,7 @@ name:'JOHN MANJIRO',
 life:'1827 — 1898',
 
 portrait:
-'john-manjiro-portrait.png',
+'john-manjiro-portrait.jpg',
 
 description:
 'Nakahama Manjiro connected Japan and America during the dawn of globalization.',
@@ -536,7 +530,7 @@ name:'NIKOLA TESLA',
 life:'1856 — 1943',
 
 portrait:
-'nikola-tesla-portrait.png',
+'nikola-tesla-portrait.jpeg',
 
 description:
 'Tesla transformed modern civilization through electricity, wireless communication, and visionary engineering.',
@@ -548,7 +542,7 @@ tags:[
 'SCIENCE'
 ],
 
-color:0xaa66ff,
+color:0xcc88ff,
 
 locations:[
 
@@ -609,9 +603,6 @@ document.getElementById('description');
 
 const tagsContainer =
 document.getElementById('tags');
-
-const labelsContainer =
-document.getElementById('labelsContainer');
 
 /* =========================
 HELPERS
@@ -713,9 +704,11 @@ tagsContainer.appendChild(div);
 
 });
 
-/* ===== NODES ===== */
+/* ===== ROUTE ===== */
 
 const routePoints = [];
+
+/* ===== CREATE NODES ===== */
 
 data.locations.forEach(location=>{
 
@@ -723,7 +716,7 @@ const position =
 latLonToVector3(
 location.lat,
 location.lon,
-2.05
+2.04
 );
 
 routePoints.push(position);
@@ -772,23 +765,24 @@ node:node
 
 });
 
-/* ===== ROUTE ===== */
+/* ===== CURVE ===== */
+
+const elevatedPoints =
+routePoints.map(point=>{
+
+return point.clone()
+.normalize()
+.multiplyScalar(2.12);
+
+});
 
 const curve =
 new THREE.CatmullRomCurve3(
-routePoints
+elevatedPoints
 );
 
 const curvePoints =
-curve.getPoints(300);
-
-for(let i=0;i<curvePoints.length;i++){
-
-curvePoints[i]
-.normalize()
-.multiplyScalar(2.08);
-
-}
+curve.getPoints(400);
 
 const routeGeometry =
 new THREE.BufferGeometry()
@@ -796,9 +790,13 @@ new THREE.BufferGeometry()
 
 const routeMaterial =
 new THREE.LineBasicMaterial({
+
 color:data.color,
+
 transparent:true,
+
 opacity:1
+
 });
 
 routeLine =
