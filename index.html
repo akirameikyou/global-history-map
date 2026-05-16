@@ -1,3 +1,8 @@
+<!-- ========================= -->
+<!-- GLOBAL HISTORY MAP v5 -->
+<!-- JOHN MANJIRO EDITION -->
+<!-- ========================= -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +13,8 @@
 
 <style>
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
 *{
     margin:0;
     padding:0;
@@ -17,241 +24,307 @@
 body{
     overflow:hidden;
     background:black;
-    font-family:Arial, Helvetica, sans-serif;
     color:white;
+    font-family:'Inter',sans-serif;
 }
 
-/* 星空 */
+/* ========================= */
+/* BACKGROUND */
+/* ========================= */
 
-body::before{
-    content:"";
+#bg{
     position:fixed;
     inset:0;
     background:
-        radial-gradient(circle at 20% 30%, white 1px, transparent 2px),
-        radial-gradient(circle at 70% 20%, white 1px, transparent 2px),
-        radial-gradient(circle at 40% 80%, white 1px, transparent 2px),
-        radial-gradient(circle at 90% 70%, white 1px, transparent 2px),
-        radial-gradient(circle at 10% 60%, white 1px, transparent 2px);
-    background-size:300px 300px;
-    opacity:0.5;
+    radial-gradient(circle at center, rgba(0,150,255,.08), transparent 60%),
+    black;
+    z-index:-3;
+}
+
+.stars{
+    position:fixed;
+    inset:0;
     z-index:-2;
 }
 
-/* タイトル */
+.star{
+    position:absolute;
+    background:white;
+    border-radius:50%;
+    opacity:.8;
+}
 
-#title{
+/* ========================= */
+/* TITLE */
+/* ========================= */
+
+.title{
     position:absolute;
     top:18px;
     width:100%;
     text-align:center;
-    font-size:82px;
-    letter-spacing:8px;
-    font-weight:700;
-    color:white;
-    text-shadow:
-        0 0 10px white,
-        0 0 25px white,
-        0 0 50px white;
-    z-index:20;
+    z-index:10;
     pointer-events:none;
 }
 
-/* 地球 */
+.title h1{
+    font-size:82px;
+    font-weight:800;
+    letter-spacing:8px;
 
-#globeViz{
+    color:white;
+
+    text-shadow:
+    0 0 10px rgba(255,255,255,.9),
+    0 0 25px rgba(255,255,255,.8),
+    0 0 45px rgba(255,255,255,.7);
+}
+
+.subtitle{
+    margin-top:14px;
+    color:#45dfff;
+    letter-spacing:12px;
+    font-size:16px;
+}
+
+/* ========================= */
+/* LEFT PANEL */
+/* ========================= */
+
+.left-panel{
+    position:absolute;
+    left:28px;
+    top:100px;
+
+    width:370px;
+    height:640px;
+
+    padding:24px;
+
+    background:rgba(0,0,0,.45);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    backdrop-filter:blur(10px);
+
+    overflow:auto;
+
+    z-index:20;
+}
+
+.left-panel h2{
+    font-size:14px;
+    letter-spacing:5px;
+    margin-bottom:30px;
+    color:white;
+}
+
+.event{
+    position:relative;
+
+    margin-bottom:38px;
+    padding-left:22px;
+
+    border-left:3px solid #00e5ff;
+
+    transition:.3s;
+}
+
+.event:hover{
+    transform:translateX(6px);
+    border-left:3px solid white;
+}
+
+.event-year{
+    color:#57e9ff;
+    font-size:14px;
+    letter-spacing:4px;
+    margin-bottom:12px;
+}
+
+.event-text{
+    font-size:16px;
+    line-height:1.7;
+    color:rgba(255,255,255,.92);
+}
+
+/* ========================= */
+/* RIGHT PANEL */
+/* ========================= */
+
+.right-panel{
+    position:absolute;
+
+    right:28px;
+    top:88px;
+
+    width:380px;
+    height:760px;
+
+    background:rgba(0,0,0,.55);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    backdrop-filter:blur(10px);
+
+    padding:18px;
+
+    overflow:auto;
+
+    z-index:20;
+}
+
+.selector{
+    width:100%;
+    background:black;
+    border:1px solid rgba(255,255,255,.2);
+    color:white;
+    padding:16px;
+    margin-bottom:28px;
+    font-size:16px;
+}
+
+.portrait{
+    width:190px;
+    height:190px;
+
+    object-fit:cover;
+
+    border-radius:26px;
+
+    display:block;
+
+    margin:0 auto 30px auto;
+
+    box-shadow:
+    0 0 20px rgba(0,255,255,.25);
+}
+
+.name{
+    font-size:64px;
+    font-weight:800;
+    line-height:.95;
+    margin-bottom:22px;
+}
+
+.life{
+    color:#55dcff;
+    letter-spacing:10px;
+    font-size:16px;
+    margin-bottom:36px;
+}
+
+.bio{
+    font-size:17px;
+    line-height:2;
+    color:rgba(255,255,255,.88);
+}
+
+/* ========================= */
+/* GLOBE */
+/* ========================= */
+
+#container{
     position:absolute;
     inset:0;
     z-index:1;
 }
 
-/* 左イベント */
+/* ========================= */
+/* TIMELINE */
+/* ========================= */
 
-#eventsPanel{
-    position:absolute;
-    top:100px;
-    left:28px;
-    width:370px;
-    height:600px;
-
-    background:rgba(0,0,0,0.55);
-    border:1px solid rgba(255,255,255,0.08);
-
-    padding:24px;
-
-    backdrop-filter:blur(10px);
-
-    z-index:15;
-}
-
-.panelTitle{
-    font-size:15px;
-    letter-spacing:5px;
-    margin-bottom:28px;
-    color:white;
-}
-
-.event{
-    margin-bottom:32px;
-    padding-left:16px;
-    border-left:3px solid #00e5ff;
-}
-
-.eventYear{
-    color:#7fe8ff;
-    font-size:13px;
-    letter-spacing:3px;
-    margin-bottom:10px;
-}
-
-.eventText{
-    color:white;
-    line-height:1.7;
-    font-size:16px;
-}
-
-/* 右人物 */
-
-#infoPanel{
-    position:absolute;
-    top:88px;
-    right:28px;
-
-    width:380px;
-    height:760px;
-
-    background:rgba(0,0,0,0.55);
-    border:1px solid rgba(255,255,255,0.08);
-
-    backdrop-filter:blur(10px);
-
-    padding:20px;
-
-    z-index:15;
-}
-
-/* セレクト */
-
-#personSelect{
-    width:100%;
-    height:58px;
-
-    background:black;
-    color:white;
-
-    border:1px solid rgba(255,255,255,0.25);
-
-    font-size:16px;
-    padding-left:18px;
-
-    margin-bottom:28px;
-}
-
-/* 肖像 */
-
-#portrait{
-    width:170px;
-    height:170px;
-
-    object-fit:cover;
-
-    border-radius:22px;
-
-    display:block;
-    margin:auto;
-
-    box-shadow:
-        0 0 20px rgba(255,255,255,0.15);
-}
-
-/* 名前 */
-
-#personName{
-    margin-top:34px;
-
-    font-size:64px;
-    font-weight:700;
-    line-height:0.92;
-
-    color:white;
-}
-
-/* 年代 */
-
-#personYears{
-    margin-top:18px;
-
-    color:#6ddfff;
-    letter-spacing:8px;
-    font-size:16px;
-}
-
-/* 説明 */
-
-#personDescription{
-    margin-top:34px;
-
-    line-height:1.95;
-    color:#e0e0e0;
-
-    font-size:17px;
-}
-
-/* 年代バー */
-
-#timeline{
+.timeline-wrap{
     position:absolute;
 
-    bottom:42px;
-    left:230px;
-    right:230px;
+    bottom:36px;
+    left:240px;
+    right:240px;
 
     height:90px;
 
-    z-index:15;
+    z-index:30;
 }
 
-#timelineLine{
+.timeline-line{
     position:absolute;
-    top:42px;
+    top:48px;
 
     width:100%;
     height:2px;
 
-    background:rgba(255,255,255,0.18);
+    background:rgba(255,255,255,.18);
 }
 
-/* 年代 */
-
-.yearMark{
+.timeline-glow{
     position:absolute;
-    top:0;
+    top:46px;
+    left:56%;
 
-    transform:translateX(-50%);
-
-    color:white;
-
-    opacity:0.8;
-
-    font-size:14px;
-    letter-spacing:3px;
-}
-
-/* 生涯バー */
-
-#lifeBar{
-    position:absolute;
-    top:40px;
-
+    width:230px;
     height:4px;
 
     background:#00e5ff;
 
     box-shadow:
-        0 0 10px #00e5ff,
-        0 0 20px #00e5ff;
+    0 0 12px #00e5ff,
+    0 0 24px #00e5ff,
+    0 0 36px #00e5ff;
+}
 
-    border-radius:999px;
+.year{
+    position:absolute;
+    top:0;
+
+    color:white;
+    opacity:.7;
+
+    font-size:14px;
+    letter-spacing:3px;
+}
+
+/* ========================= */
+/* LABELS */
+/* ========================= */
+
+.label{
+    position:absolute;
+
+    color:white;
+
+    font-size:15px;
+    letter-spacing:3px;
+
+    text-shadow:
+    0 0 10px rgba(255,255,255,.9);
+
+    pointer-events:none;
+}
+
+.label.cyan{
+    color:#61ecff;
+}
+
+.label.white{
+    color:white;
+}
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+
+@media(max-width:1200px){
+
+.left-panel,
+.right-panel{
+    transform:scale(.85);
+    transform-origin:top;
+}
+
+.title h1{
+    font-size:56px;
+}
+
 }
 
 </style>
@@ -259,308 +332,347 @@ body::before{
 
 <body>
 
-<div id="title">GLOBAL HISTORY MAP</div>
+<div id="bg"></div>
 
-<div id="globeViz"></div>
+<div class="stars" id="stars"></div>
 
-<!-- 左イベント -->
+<!-- ========================= -->
+<!-- TITLE -->
+<!-- ========================= -->
 
-<div id="eventsPanel">
+<div class="title">
+    <h1>GLOBAL HISTORY MAP</h1>
+    <div class="subtitle">JOHN MANJIRO</div>
+</div>
 
-    <div class="panelTitle">
-        WORLD EVENTS
-    </div>
+<!-- ========================= -->
+<!-- LEFT EVENTS -->
+<!-- ========================= -->
 
-    <div id="eventsContainer"></div>
+<div class="left-panel">
+
+<h2>WORLD EVENTS</h2>
+
+<div class="event">
+<div class="event-year">1839</div>
+<div class="event-text">
+The First Opium War begins between Britain and Qing China.
+</div>
+</div>
+
+<div class="event">
+<div class="event-year">1848</div>
+<div class="event-text">
+California Gold Rush accelerates Pacific migration and trade.
+</div>
+</div>
+
+<div class="event">
+<div class="event-year">1853</div>
+<div class="event-text">
+Commodore Perry arrives in Japan with the Black Ships.
+</div>
+</div>
+
+<div class="event">
+<div class="event-year">1868</div>
+<div class="event-text">
+The Meiji Restoration transforms Japan into a modern nation.
+</div>
+</div>
 
 </div>
 
-<!-- 右人物 -->
+<!-- ========================= -->
+<!-- RIGHT PANEL -->
+<!-- ========================= -->
 
-<div id="infoPanel">
+<div class="right-panel">
 
-    <select id="personSelect"></select>
+<select class="selector">
+<option>JOHN MANJIRO</option>
+<option>NIKOLA TESLA</option>
+</select>
 
-    <img id="portrait" />
+<img src="john-manjiro-portrait.png" class="portrait">
 
-    <div id="personName"></div>
+<div class="name">
+JOHN<br>MANJIRO
+</div>
 
-    <div id="personYears"></div>
+<div class="life">
+1827 — 1898
+</div>
 
-    <div id="personDescription"></div>
+<div class="bio">
+Nakahama Manjiro connected Japan and America during the dawn of globalization.<br><br>
+
+Shipwrecked as a teenager and rescued by an American whaling ship, he crossed the Pacific, studied navigation and Western science, and returned to Japan during the final years of the Edo period.
+</div>
 
 </div>
 
-<!-- 年代バー -->
+<!-- ========================= -->
+<!-- TIMELINE -->
+<!-- ========================= -->
 
-<div id="timeline">
+<div class="timeline-wrap">
 
-    <div id="timelineLine"></div>
+<div class="timeline-line"></div>
 
-    <div class="yearMark" style="left:0%">1600</div>
-    <div class="yearMark" style="left:20%">1700</div>
-    <div class="yearMark" style="left:40%">1800</div>
-    <div class="yearMark" style="left:60%">1900</div>
-    <div class="yearMark" style="left:80%">2000</div>
+<div class="timeline-glow"></div>
 
-    <div id="lifeBar"></div>
+<div class="year" style="left:0%">1600</div>
+<div class="year" style="left:20%">1700</div>
+<div class="year" style="left:40%">1800</div>
+<div class="year" style="left:60%">1850</div>
+<div class="year" style="left:80%">1900</div>
+<div class="year" style="left:96%">2000</div>
 
 </div>
 
-<script src="https://unpkg.com/three"></script>
-<script src="https://unpkg.com/globe.gl"></script>
+<!-- ========================= -->
+<!-- THREE JS -->
+<!-- ========================= -->
+
+<div id="container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/controls/OrbitControls.js"></script>
 
 <script>
 
-const people = {
+/* ========================= */
+/* STARS */
+/* ========================= */
 
-    manjiro: {
+const stars = document.getElementById('stars');
 
-        name: "JOHN<br>MANJIRO",
+for(let i=0;i<250;i++){
 
-        shortName: "JOHN MANJIRO",
+    const s = document.createElement('div');
 
-        years: "1827 — 1898",
+    s.className='star';
 
-        birth: 1827,
-        death: 1898,
+    const size=Math.random()*2;
 
-        image: "john-manjiro-portrait.png",
+    s.style.width=size+'px';
+    s.style.height=size+'px';
 
-        description:
-            "Nakahama Manjiro connected Japan and America during the dawn of globalization.",
+    s.style.left=Math.random()*100+'%';
+    s.style.top=Math.random()*100+'%';
 
-        color: "#00e5ff",
+    s.style.opacity=Math.random();
 
-        events: [
-
-            {
-                year:"1839",
-                text:"The First Opium War begins."
-            },
-
-            {
-                year:"1848",
-                text:"California Gold Rush accelerates migration."
-            },
-
-            {
-                year:"1853",
-                text:"Commodore Perry arrives in Japan."
-            },
-
-            {
-                year:"1868",
-                text:"Meiji Restoration transforms Japan."
-            }
-
-        ],
-
-        locations: [
-
-            {
-                lat:32.7805,
-                lng:132.9553,
-                name:"TOSASHIMIZU"
-            },
-
-            {
-                lat:21.3069,
-                lng:-157.8583,
-                name:"HAWAII"
-            },
-
-            {
-                lat:37.7749,
-                lng:-122.4194,
-                name:"SAN FRANCISCO"
-            }
-
-        ]
-    }
-
-};
-
-const world = Globe()
-
-(document.getElementById('globeViz'))
-
-.globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
-
-.bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
-
-.backgroundColor('rgba(0,0,0,0)')
-
-.atmosphereColor('#00d9ff')
-
-.atmosphereAltitude(0.15);
-
-world.controls().autoRotate = true;
-world.controls().autoRotateSpeed = 0.4;
-
-world.pointOfView({
-    lat:20,
-    lng:-150,
-    altitude:2.2
-});
-
-const select = document.getElementById("personSelect");
-
-Object.keys(people).forEach(key=>{
-
-    const option = document.createElement("option");
-
-    option.value = key;
-    option.textContent = people[key].shortName;
-
-    select.appendChild(option);
-
-});
-
-function setPerson(key){
-
-    const person = people[key];
-
-    document.getElementById("portrait").src = person.image;
-
-    document.getElementById("personName").innerHTML = person.name;
-
-    document.getElementById("personYears").innerHTML = person.years;
-
-    document.getElementById("personDescription").innerHTML =
-        person.description;
-
-    /* 左イベント */
-
-    const eventsContainer =
-        document.getElementById("eventsContainer");
-
-    eventsContainer.innerHTML = "";
-
-    person.events.forEach(ev=>{
-
-        const div = document.createElement("div");
-
-        div.className = "event";
-
-        div.style.borderLeftColor = person.color;
-
-        div.innerHTML = `
-            <div class="eventYear">${ev.year}</div>
-            <div class="eventText">${ev.text}</div>
-        `;
-
-        eventsContainer.appendChild(div);
-
-    });
-
-    /* 地点 */
-
-    world.pointsData(
-        person.locations.map(loc=>({
-
-            lat:loc.lat,
-            lng:loc.lng,
-            size:0.55,
-            color:person.color,
-            label:loc.name
-
-        }))
-    )
-
-    .pointAltitude(0.02)
-
-    .pointColor("color")
-
-    .pointRadius("size")
-
-    .labelsData(
-        person.locations.map(loc=>({
-
-            lat:loc.lat,
-            lng:loc.lng,
-            text:loc.name,
-            color:"white",
-            size:1.2
-
-        }))
-    )
-
-    .labelText("text")
-
-    .labelSize("size")
-
-    .labelColor("color")
-
-    .labelDotRadius(0);
-
-    /* 線 */
-
-    const arcs = [];
-
-    for(let i=0;i<person.locations.length-1;i++){
-
-        arcs.push({
-
-            startLat:person.locations[i].lat,
-            startLng:person.locations[i].lng,
-
-            endLat:person.locations[i+1].lat,
-            endLng:person.locations[i+1].lng,
-
-            color:[person.color, person.color]
-
-        });
-
-    }
-
-    world.arcsData(arcs)
-
-        .arcColor("color")
-
-        .arcAltitude(0.25)
-
-        .arcStroke(0.7)
-
-        .arcDashLength(0.5)
-
-        .arcDashGap(1)
-
-        .arcDashAnimateTime(3500);
-
-    /* 年代バー */
-
-    const start = 1600;
-    const end = 2020;
-
-    const left =
-        ((person.birth-start)/(end-start))*100;
-
-    const width =
-        ((person.death-person.birth)/(end-start))*100;
-
-    const lifeBar =
-        document.getElementById("lifeBar");
-
-    lifeBar.style.left = left + "%";
-
-    lifeBar.style.width = width + "%";
-
-    lifeBar.style.background = person.color;
-
-    lifeBar.style.boxShadow =
-        `0 0 12px ${person.color},
-         0 0 22px ${person.color}`;
-
+    stars.appendChild(s);
 }
 
-select.addEventListener("change",(e)=>{
+/* ========================= */
+/* SCENE */
+/* ========================= */
 
-    setPerson(e.target.value);
+const scene = new THREE.Scene();
 
+const camera = new THREE.PerspectiveCamera(
+45,
+window.innerWidth/window.innerHeight,
+0.1,
+1000
+);
+
+camera.position.z = 8;
+
+const renderer = new THREE.WebGLRenderer({
+antialias:true,
+alpha:true
 });
 
-setPerson("manjiro");
+renderer.setSize(window.innerWidth,window.innerHeight);
+
+document.getElementById('container')
+.appendChild(renderer.domElement);
+
+/* ========================= */
+/* CONTROLS */
+/* ========================= */
+
+const controls = new THREE.OrbitControls(
+camera,
+renderer.domElement
+);
+
+controls.enableDamping=true;
+controls.dampingFactor=.05;
+
+controls.enablePan=false;
+
+controls.minDistance=5;
+controls.maxDistance=12;
+
+/* ========================= */
+/* LIGHT */
+/* ========================= */
+
+const ambient = new THREE.AmbientLight(0xffffff,.9);
+scene.add(ambient);
+
+const dir = new THREE.DirectionalLight(0xffffff,1.2);
+
+dir.position.set(5,3,5);
+
+scene.add(dir);
+
+/* ========================= */
+/* EARTH */
+/* ========================= */
+
+const textureLoader = new THREE.TextureLoader();
+
+const earthTexture = textureLoader.load(
+'https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg'
+);
+
+const geometry = new THREE.SphereGeometry(3,128,128);
+
+const material = new THREE.MeshStandardMaterial({
+map:earthTexture
+});
+
+const earth = new THREE.Mesh(geometry,material);
+
+scene.add(earth);
+
+/* ========================= */
+/* GLOW */
+/* ========================= */
+
+const glowGeometry = new THREE.SphereGeometry(3.08,64,64);
+
+const glowMaterial = new THREE.MeshBasicMaterial({
+color:0x00dfff,
+transparent:true,
+opacity:.12
+});
+
+const glow = new THREE.Mesh(glowGeometry,glowMaterial);
+
+scene.add(glow);
+
+/* ========================= */
+/* LOCATIONS */
+/* ========================= */
+
+function latLongToVector3(lat,lon,radius){
+
+    const phi=(90-lat)*(Math.PI/180);
+    const theta=(lon+180)*(Math.PI/180);
+
+    const x=-(radius*Math.sin(phi)*Math.cos(theta));
+    const z=(radius*Math.sin(phi)*Math.sin(theta));
+    const y=(radius*Math.cos(phi));
+
+    return new THREE.Vector3(x,y,z);
+}
+
+const tosa = latLongToVector3(32.78,132.95,3.02);
+const hawaii = latLongToVector3(19.89,-155.58,3.02);
+const sf = latLongToVector3(37.77,-122.41,3.02);
+
+/* ========================= */
+/* DOTS */
+/* ========================= */
+
+function addDot(position,color){
+
+    const geo = new THREE.SphereGeometry(.06,16,16);
+
+    const mat = new THREE.MeshBasicMaterial({
+        color:color
+    });
+
+    const dot = new THREE.Mesh(geo,mat);
+
+    dot.position.copy(position);
+
+    scene.add(dot);
+
+    return dot;
+}
+
+addDot(tosa,0x00e5ff);
+addDot(hawaii,0x00e5ff);
+addDot(sf,0xffffff);
+
+/* ========================= */
+/* ARC */
+/* ========================= */
+
+function createArc(start,end){
+
+    const mid = start.clone().add(end).multiplyScalar(.5);
+
+    mid.normalize();
+    mid.multiplyScalar(4.2);
+
+    const curve = new THREE.QuadraticBezierCurve3(
+        start,
+        mid,
+        end
+    );
+
+    const points = curve.getPoints(100);
+
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+    const material = new THREE.LineBasicMaterial({
+        color:0x00e5ff,
+        transparent:true,
+        opacity:.9
+    });
+
+    const line = new THREE.Line(geometry,material);
+
+    scene.add(line);
+}
+
+createArc(tosa,hawaii);
+createArc(hawaii,sf);
+
+/* ========================= */
+/* ANIMATE */
+/* ========================= */
+
+function animate(){
+
+    requestAnimationFrame(animate);
+
+    earth.rotation.y += 0.0007;
+    glow.rotation.y += 0.0007;
+
+    controls.update();
+
+    renderer.render(scene,camera);
+}
+
+animate();
+
+/* ========================= */
+/* RESIZE */
+/* ========================= */
+
+window.addEventListener('resize',()=>{
+
+    camera.aspect =
+    window.innerWidth/window.innerHeight;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+    );
+});
 
 </script>
 
