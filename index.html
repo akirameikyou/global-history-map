@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>GLOBAL HISTORY MAP</title>
 
 <style>
+
+/* =========================================================
+BASE
+========================================================= */
 
 *{
 margin:0;
@@ -21,117 +26,159 @@ font-family:Arial,sans-serif;
 color:white;
 }
 
-/* ===== CANVAS ===== */
-
 canvas{
 display:block;
 }
 
-/* ===== TITLE ===== */
+/* =========================================================
+TITLE
+========================================================= */
 
 .title{
 position:absolute;
-top:24px;
+top:22px;
 width:100%;
 text-align:center;
-z-index:10;
 pointer-events:none;
+z-index:20;
 }
 
 .title h1{
-font-size:72px;
+font-size:68px;
 letter-spacing:10px;
-font-weight:700;
-color:white;
 
 text-shadow:
 0 0 10px rgba(255,255,255,0.8),
-0 0 30px rgba(255,255,255,0.6);
+0 0 35px rgba(255,255,255,0.5);
 }
 
 .title p{
 margin-top:10px;
-font-size:18px;
-letter-spacing:12px;
+font-size:16px;
+letter-spacing:10px;
 color:#7ee7ff;
 }
 
-/* ===== LABELS ===== */
+/* =========================================================
+LEFT PANEL
+========================================================= */
 
-.label{
+.left-panel{
 position:absolute;
-font-size:14px;
-letter-spacing:3px;
-color:white;
-pointer-events:none;
-white-space:nowrap;
 
-text-shadow:
-0 0 10px rgba(255,255,255,0.9),
-0 0 20px rgba(255,255,255,0.5);
+top:120px;
+left:30px;
 
-transform:translate(-50%,-50%);
-z-index:20;
-}
-
-/* ===== RIGHT PANEL ===== */
-
-.panel{
-position:absolute;
-top:110px;
-right:40px;
-
-width:360px;
-height:760px;
+width:320px;
+height:720px;
 
 background:rgba(0,0,0,0.72);
 
-border:1px solid rgba(0,200,255,0.2);
-
-box-shadow:
-0 0 30px rgba(0,150,255,0.15);
-
-padding:22px;
+border:
+1px solid rgba(255,255,255,0.08);
 
 backdrop-filter:blur(8px);
+
+padding:24px;
 
 overflow-y:auto;
 
 z-index:30;
 }
 
-/* ===== SELECT ===== */
+.left-title{
+font-size:16px;
+letter-spacing:4px;
+margin-bottom:24px;
+opacity:0.8;
+}
+
+.event{
+padding-bottom:18px;
+margin-bottom:18px;
+
+border-bottom:
+1px solid rgba(255,255,255,0.08);
+}
+
+.event-year{
+font-size:12px;
+letter-spacing:3px;
+margin-bottom:8px;
+opacity:0.7;
+}
+
+.event-text{
+font-size:15px;
+line-height:1.8;
+color:#d8d8d8;
+}
+
+/* =========================================================
+RIGHT PANEL
+========================================================= */
+
+.right-panel{
+position:absolute;
+
+top:120px;
+right:30px;
+
+width:360px;
+height:720px;
+
+background:rgba(0,0,0,0.72);
+
+border:
+1px solid rgba(255,255,255,0.08);
+
+backdrop-filter:blur(8px);
+
+padding:24px;
+
+overflow-y:auto;
+
+z-index:30;
+}
+
+/* =========================================================
+SELECT
+========================================================= */
 
 select{
 width:100%;
+
 padding:14px;
 
 background:black;
 color:white;
 
-border:1px solid rgba(255,255,255,0.2);
+border:
+1px solid rgba(255,255,255,0.18);
 
 font-size:16px;
-margin-bottom:20px;
+
+margin-bottom:26px;
 }
 
-/* ===== NAME ===== */
+/* =========================================================
+CHARACTER
+========================================================= */
 
 .character-name{
-font-size:46px;
+font-size:42px;
 font-weight:700;
 letter-spacing:4px;
 line-height:1.0;
-margin-bottom:8px;
+margin-bottom:10px;
 }
 
 .character-years{
-font-size:18px;
-letter-spacing:5px;
+font-size:16px;
+letter-spacing:4px;
 margin-bottom:20px;
+opacity:0.8;
 }
-
-/* ===== PORTRAIT ===== */
 
 .portrait{
 width:180px;
@@ -139,76 +186,74 @@ height:180px;
 
 object-fit:cover;
 
-border-radius:18px;
-
 display:block;
 
 margin:0 auto 24px auto;
 
-border:1px solid rgba(255,255,255,0.2);
+border-radius:18px;
+
+border:
+1px solid rgba(255,255,255,0.15);
 
 box-shadow:
-0 0 25px rgba(255,255,255,0.15);
+0 0 25px rgba(255,255,255,0.12);
 }
 
-/* ===== DESCRIPTION ===== */
-
 .description{
-font-size:17px;
+font-size:16px;
 line-height:1.9;
 color:#d8d8d8;
 
 margin-bottom:28px;
 }
 
-/* ===== TAGS ===== */
+/* =========================================================
+TAGS
+========================================================= */
 
 .tags{
 display:flex;
 flex-wrap:wrap;
 gap:10px;
-margin-bottom:35px;
 }
 
 .tag{
 padding:8px 14px;
 
-border:1px solid currentColor;
-
-font-size:12px;
+font-size:11px;
 letter-spacing:2px;
+
+border:1px solid currentColor;
 }
 
-/* ===== CONTEXT ===== */
+/* =========================================================
+LABELS
+========================================================= */
 
-.context-title{
-font-size:16px;
-letter-spacing:4px;
-margin-bottom:16px;
-opacity:0.8;
-}
+.label{
+position:absolute;
 
-.event{
-padding:12px 0;
-border-bottom:1px solid rgba(255,255,255,0.08);
-}
-
-.event-year{
 font-size:13px;
-letter-spacing:3px;
-margin-bottom:6px;
-opacity:0.7;
+letter-spacing:2px;
+
+pointer-events:none;
+
+white-space:nowrap;
+
+transform:translate(-50%,-50%);
+
+text-shadow:
+0 0 10px rgba(255,255,255,0.9),
+0 0 25px rgba(255,255,255,0.6);
+
+z-index:25;
 }
 
-.event-text{
-font-size:15px;
-line-height:1.6;
-color:#d8d8d8;
-}
+/* =========================================================
+TIMELINE
+========================================================= */
 
-/* ===== TIMELINE ===== */
-
-.timeline{
+.timeline-container{
 position:absolute;
 
 bottom:42px;
@@ -216,47 +261,78 @@ left:50%;
 
 transform:translateX(-50%);
 
+width:72%;
+
+z-index:40;
+}
+
+/* ===== YEARS ===== */
+
+.timeline-years{
 display:flex;
-align-items:center;
-gap:14px;
+justify-content:space-between;
 
-z-index:50;
+margin-bottom:14px;
+
+font-size:12px;
+letter-spacing:3px;
+
+opacity:0.75;
 }
 
-.year{
-font-size:13px;
-letter-spacing:5px;
-opacity:0.85;
-}
+/* ===== BASE LINE ===== */
 
-.line{
-width:95px;
-height:2px;
-background:rgba(255,255,255,0.18);
+.timeline-line{
 position:relative;
+
+width:100%;
+height:3px;
+
+background:
+rgba(255,255,255,0.15);
+
 overflow:hidden;
 }
 
-.active-line{
+/* ===== LIFE BAR ===== */
+
+.life-bar{
 position:absolute;
-left:0;
 top:0;
 
 height:100%;
-width:0%;
 }
 
-/* ===== RESPONSIVE ===== */
+/* ===== LIFE LABEL ===== */
 
-@media(max-width:1200px){
+.life-label{
+position:absolute;
 
-.panel{
+top:-24px;
+
+font-size:11px;
+letter-spacing:2px;
+
+transform:translateX(-50%);
+white-space:nowrap;
+}
+
+/* =========================================================
+RESPONSIVE
+========================================================= */
+
+@media(max-width:1400px){
+
+.left-panel{
+width:280px;
+}
+
+.right-panel{
 width:320px;
-height:680px;
 }
 
 .title h1{
-font-size:50px;
+font-size:52px;
 }
 
 }
@@ -266,73 +342,124 @@ font-size:50px;
 
 <body>
 
-<!-- ===== TITLE ===== -->
+<!-- =========================================================
+TITLE
+========================================================= -->
 
 <div class="title">
+
 <h1>GLOBAL HISTORY MAP</h1>
-<p id="subtitle">JOHN MANJIRO</p>
+
+<p id="subtitle">
+JOHN MANJIRO
+</p>
+
 </div>
 
-<!-- ===== LABEL CONTAINER ===== -->
+<!-- =========================================================
+LEFT PANEL
+========================================================= -->
 
-<div id="labels"></div>
+<div class="left-panel">
 
-<!-- ===== RIGHT PANEL ===== -->
-
-<div class="panel">
-
-<select id="characterSelect">
-<option value="john">JOHN MANJIRO</option>
-<option value="tesla">NIKOLA TESLA</option>
-</select>
-
-<div class="character-name" id="characterName"></div>
-
-<div class="character-years" id="characterYears"></div>
-
-<img class="portrait" id="portrait" />
-
-<div class="description" id="description"></div>
-
-<div class="tags" id="tags"></div>
-
-<div class="context-title">
-WORLD CONTEXT
+<div class="left-title">
+WORLD EVENTS
 </div>
 
 <div id="events"></div>
 
 </div>
 
-<!-- ===== TIMELINE ===== -->
+<!-- =========================================================
+RIGHT PANEL
+========================================================= -->
 
-<div class="timeline">
+<div class="right-panel">
 
-<div class="year">1800</div>
+<select id="characterSelect">
 
-<div class="line">
-<div class="active-line" id="line1"></div>
+<option value="john">
+JOHN MANJIRO
+</option>
+
+<option value="tesla">
+NIKOLA TESLA
+</option>
+
+</select>
+
+<div
+class="character-name"
+id="characterName">
 </div>
 
-<div class="year">1850</div>
-
-<div class="line">
-<div class="active-line" id="line2"></div>
+<div
+class="character-years"
+id="characterYears">
 </div>
 
-<div class="year">1900</div>
+<img
+class="portrait"
+id="portrait"
+src=""
+>
 
-<div class="line">
-<div class="active-line" id="line3"></div>
+<div
+class="description"
+id="description">
 </div>
 
-<div class="year">1950</div>
+<div
+class="tags"
+id="tags">
+</div>
+
+</div>
+
+<!-- =========================================================
+LABELS
+========================================================= -->
+
+<div id="labels"></div>
+
+<!-- =========================================================
+TIMELINE
+========================================================= -->
+
+<div class="timeline-container">
+
+<div class="timeline-years">
+
+<div>1600</div>
+<div>1650</div>
+<div>1700</div>
+<div>1750</div>
+<div>1800</div>
+<div>1850</div>
+<div>1900</div>
+
+</div>
+
+<div class="timeline-line">
+
+<div
+class="life-bar"
+id="lifeBar">
+</div>
+
+<div
+class="life-label"
+id="lifeLabel">
+</div>
+
+</div>
 
 </div>
 
 <script type="module">
 
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js';
+import * as THREE from
+'https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js';
 
 /* =========================================================
 DATA
@@ -348,12 +475,17 @@ subtitle:"JOHN MANJIRO",
 
 years:"1827 — 1898",
 
-portrait:"john-manjiro-portrait.png",
+birth:1827,
+
+death:1898,
 
 theme:"#2eefff",
 
+portrait:
+"john-manjiro-portrait.png",
+
 description:
-"Nakahama Manjiro connected Japan and America during the dawn of globalization. After surviving a shipwreck, he crossed the Pacific Ocean, studied Western navigation and science, and later returned to Japan during the final years of the Edo period. His life symbolizes the opening of Japan to the modern world.",
+"Nakahama Manjiro connected Japan and America during the dawn of globalization. Shipwrecked as a teenager and rescued by an American whaling ship, he crossed the Pacific, studied navigation and Western science, and returned to Japan during the final years of the Edo period. His life symbolizes the opening of Japan to the modern world.",
 
 tags:[
 "PACIFIC",
@@ -363,45 +495,55 @@ tags:[
 ],
 
 events:[
+
 {
 year:"1839",
 text:"The First Opium War begins between Britain and Qing China."
 },
+
 {
 year:"1848",
-text:"California Gold Rush accelerates Pacific migration and trade."
+text:"California Gold Rush accelerates Pacific migration and global trade."
 },
+
 {
 year:"1853",
 text:"Commodore Perry arrives in Japan with the Black Ships."
 },
+
 {
 year:"1868",
 text:"The Meiji Restoration transforms Japan into a modern nation."
 }
+
 ],
 
 cities:[
+
 {
 name:"TOSASHIMIZU",
 lat:32.7813,
 lon:132.9553
 },
+
 {
 name:"TORISHIMA",
 lat:30.4847,
 lon:140.3033
 },
+
 {
 name:"HAWAII",
 lat:21.3069,
 lon:-157.8583
 },
+
 {
 name:"SAN FRANCISCO",
 lat:37.7749,
 lon:-122.4194
 }
+
 ]
 
 },
@@ -414,60 +556,75 @@ subtitle:"NIKOLA TESLA",
 
 years:"1856 — 1943",
 
-portrait:"nikola-tesla-portrait.png",
+birth:1856,
 
-theme:"#9c7dff",
+death:1943,
+
+theme:"#b57cff",
+
+portrait:
+"nikola-tesla-portrait.png",
 
 description:
-"Nikola Tesla transformed the modern technological world through alternating current systems, wireless energy concepts, and electromagnetic innovation. His work shaped the electric age and influenced global communication and industry.",
+"Nikola Tesla transformed the modern technological world through alternating current systems, wireless communication concepts, and electromagnetic innovation. His work shaped the electric age and influenced global communication and industry.",
 
 tags:[
 "ELECTRICITY",
 "SCIENCE",
-"INDUSTRY",
+"ENERGY",
 "MODERNITY"
 ],
 
 events:[
+
 {
 year:"1879",
 text:"Thomas Edison expands electric lighting systems."
 },
+
 {
 year:"1893",
 text:"The Chicago World's Fair showcases AC electricity."
 },
+
 {
 year:"1901",
 text:"Marconi transmits the first transatlantic radio signal."
 },
+
 {
 year:"1914",
 text:"World War I reshapes industrial civilization."
 }
+
 ],
 
 cities:[
+
 {
 name:"SMILJAN",
 lat:44.5669,
 lon:15.3175
 },
-{
-name:"BUDAPEST",
-lat:47.4979,
-lon:19.0402
-},
+
 {
 name:"PARIS",
 lat:48.8566,
 lon:2.3522
 },
+
 {
 name:"NEW YORK",
 lat:40.7128,
 lon:-74.0060
+},
+
+{
+name:"COLORADO",
+lat:38.8339,
+lon:-104.8214
 }
+
 ]
 
 }
@@ -480,7 +637,8 @@ THREE.JS
 
 const scene = new THREE.Scene();
 
-const camera = new THREE.PerspectiveCamera(
+const camera =
+new THREE.PerspectiveCamera(
 55,
 window.innerWidth/window.innerHeight,
 0.1,
@@ -489,7 +647,8 @@ window.innerWidth/window.innerHeight,
 
 camera.position.z = 5.5;
 
-const renderer = new THREE.WebGLRenderer({
+const renderer =
+new THREE.WebGLRenderer({
 antialias:true
 });
 
@@ -498,23 +657,33 @@ window.innerWidth,
 window.innerHeight
 );
 
-renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setPixelRatio(
+window.devicePixelRatio
+);
 
-document.body.appendChild(renderer.domElement);
+document.body.appendChild(
+renderer.domElement
+);
 
 /* =========================================================
 STARS
 ========================================================= */
 
-const starsGeometry = new THREE.BufferGeometry();
+const starsGeometry =
+new THREE.BufferGeometry();
 
 const starVertices = [];
 
-for(let i=0;i<14000;i++){
+for(let i=0;i<15000;i++){
 
-const x = (Math.random()-0.5)*2000;
-const y = (Math.random()-0.5)*2000;
-const z = (Math.random()-0.5)*2000;
+const x =
+(Math.random()-0.5)*2400;
+
+const y =
+(Math.random()-0.5)*2400;
+
+const z =
+(Math.random()-0.5)*2400;
 
 starVertices.push(x,y,z);
 
@@ -522,15 +691,20 @@ starVertices.push(x,y,z);
 
 starsGeometry.setAttribute(
 'position',
-new THREE.Float32BufferAttribute(starVertices,3)
+new THREE.Float32BufferAttribute(
+starVertices,
+3
+)
 );
 
-const starsMaterial = new THREE.PointsMaterial({
+const starsMaterial =
+new THREE.PointsMaterial({
 color:0xffffff,
 size:0.7
 });
 
-const stars = new THREE.Points(
+const stars =
+new THREE.Points(
 starsGeometry,
 starsMaterial
 );
@@ -541,13 +715,18 @@ scene.add(stars);
 EARTH
 ========================================================= */
 
-const textureLoader = new THREE.TextureLoader();
+const loader =
+new THREE.TextureLoader();
 
 const earthTexture =
-textureLoader.load('earth.jpg');
+loader.load("earth.jpg");
 
 const earthGeometry =
-new THREE.SphereGeometry(2,64,64);
+new THREE.SphereGeometry(
+2,
+64,
+64
+);
 
 const earthMaterial =
 new THREE.MeshStandardMaterial({
@@ -565,7 +744,11 @@ scene.add(earth);
 /* ===== GLOW ===== */
 
 const glowGeometry =
-new THREE.SphereGeometry(2.08,64,64);
+new THREE.SphereGeometry(
+2.08,
+64,
+64
+);
 
 const glowMaterial =
 new THREE.MeshBasicMaterial({
@@ -608,14 +791,18 @@ scene.add(ambient);
 GROUPS
 ========================================================= */
 
-const nodeGroup = new THREE.Group();
-const lineGroup = new THREE.Group();
+const nodeGroup =
+new THREE.Group();
+
+const lineGroup =
+new THREE.Group();
 
 earth.add(nodeGroup);
 earth.add(lineGroup);
 
-const labelContainer =
-document.getElementById("labels");
+/* =========================================================
+LABEL STORAGE
+========================================================= */
 
 let labels = [];
 
@@ -632,15 +819,17 @@ const theta =
 (lon+180)*(Math.PI/180);
 
 return new THREE.Vector3(
+
 -(radius*Math.sin(phi)*Math.cos(theta)),
 radius*Math.cos(phi),
 radius*Math.sin(phi)*Math.sin(theta)
+
 );
 
 }
 
 /* =========================================================
-CREATE CHARACTER
+LOAD CHARACTER
 ========================================================= */
 
 function loadCharacter(id){
@@ -655,30 +844,39 @@ while(lineGroup.children.length){
 lineGroup.remove(lineGroup.children[0]);
 }
 
-labels.forEach(l=>l.remove());
+labels.forEach(label=>label.remove());
 
 labels=[];
 
 const data = CHARACTERS[id];
 
 /* =========================================================
-UI
+TITLE
 ========================================================= */
 
 document.getElementById("subtitle")
-.innerText = data.subtitle;
+.innerText =
+data.subtitle;
+
+/* =========================================================
+RIGHT PANEL
+========================================================= */
 
 document.getElementById("characterName")
-.innerText = data.name;
+.innerText =
+data.name;
 
 document.getElementById("characterYears")
-.innerText = data.years;
+.innerText =
+data.years;
 
 document.getElementById("portrait")
-.src = data.portrait;
+.src =
+data.portrait;
 
 document.getElementById("description")
-.innerText = data.description;
+.innerText =
+data.description;
 
 /* ===== TAGS ===== */
 
@@ -692,29 +890,32 @@ data.tags.forEach(tag=>{
 const div =
 document.createElement("div");
 
-div.className="tag";
+div.className = "tag";
 
-div.innerText=tag;
+div.innerText = tag;
 
-div.style.color=data.theme;
+div.style.color =
+data.theme;
 
 tagsEl.appendChild(div);
 
 });
 
-/* ===== EVENTS ===== */
+/* =========================================================
+LEFT PANEL EVENTS
+========================================================= */
 
 const eventsEl =
 document.getElementById("events");
 
-eventsEl.innerHTML="";
+eventsEl.innerHTML = "";
 
 data.events.forEach(event=>{
 
 const div =
 document.createElement("div");
 
-div.className="event";
+div.className = "event";
 
 div.innerHTML = `
 <div class="event-year">
@@ -730,17 +931,52 @@ eventsEl.appendChild(div);
 
 });
 
-/* ===== TIMELINE ===== */
+/* =========================================================
+TIMELINE
+========================================================= */
 
-document.querySelectorAll(".active-line")
-.forEach(line=>{
+const startYear = 1600;
+const endYear = 1900;
 
-line.style.background=data.theme;
-line.style.width="100%";
+const total =
+endYear - startYear;
 
-});
+const leftPercent =
+((data.birth - startYear)/total)*100;
 
-/* ===== GLOW ===== */
+const widthPercent =
+((data.death - data.birth)/total)*100;
+
+const lifeBar =
+document.getElementById("lifeBar");
+
+lifeBar.style.left =
+leftPercent + "%";
+
+lifeBar.style.width =
+widthPercent + "%";
+
+lifeBar.style.background =
+data.theme;
+
+lifeBar.style.boxShadow =
+`0 0 18px ${data.theme}`;
+
+const lifeLabel =
+document.getElementById("lifeLabel");
+
+lifeLabel.innerText =
+`${data.name} (${data.birth}-${data.death})`;
+
+lifeLabel.style.left =
+(leftPercent + widthPercent/2) + "%";
+
+lifeLabel.style.color =
+data.theme;
+
+/* =========================================================
+GLOW
+========================================================= */
 
 glow.material.color =
 new THREE.Color(data.theme);
@@ -788,9 +1024,10 @@ nodeGroup.add(node);
 const label =
 document.createElement("div");
 
-label.className="label";
+label.className = "label";
 
-label.innerText=city.name;
+label.innerText =
+city.name;
 
 document.body.appendChild(label);
 
@@ -798,7 +1035,7 @@ labels.push(label);
 
 label.userData = {
 position:pos,
-offsetX:index*6,
+offsetX:index*4,
 offsetY:index*2
 };
 
@@ -829,7 +1066,7 @@ end
 );
 
 const curvePoints =
-curve.getPoints(120);
+curve.getPoints(100);
 
 const geometry =
 new THREE.BufferGeometry()
@@ -886,10 +1123,11 @@ label.style.left =
 label.style.top =
 `${y + label.userData.offsetY}px`;
 
-/* ===== HIDE BACKSIDE ===== */
+/* ===== BACKSIDE HIDE ===== */
 
 const cameraDirection =
-camera.position.clone().normalize();
+camera.position.clone()
+.normalize();
 
 const dot =
 pos.clone()
@@ -898,11 +1136,11 @@ pos.clone()
 
 if(dot < 0){
 
-label.style.display="none";
+label.style.display = "none";
 
 }else{
 
-label.style.display="block";
+label.style.display = "block";
 
 }
 
@@ -914,17 +1152,21 @@ label.style.display="block";
 SELECT
 ========================================================= */
 
-const select =
-document.getElementById("characterSelect");
+document
+.getElementById("characterSelect")
+.addEventListener(
+"change",
+(event)=>{
 
-select.addEventListener("change",(e)=>{
+loadCharacter(
+event.target.value
+);
 
-loadCharacter(e.target.value);
-
-});
+}
+);
 
 /* =========================================================
-START
+INITIAL
 ========================================================= */
 
 loadCharacter("john");
@@ -935,15 +1177,25 @@ ANIMATION
 
 function animate(){
 
-requestAnimationFrame(animate);
+requestAnimationFrame(
+animate
+);
 
-earth.rotation.y += 0.0015;
+earth.rotation.y +=
+0.0015;
 
-glow.rotation.y += 0.0015;
+glow.rotation.y +=
+0.0015;
+
+stars.rotation.y +=
+0.00008;
 
 updateLabels();
 
-renderer.render(scene,camera);
+renderer.render(
+scene,
+camera
+);
 
 }
 
@@ -953,10 +1205,13 @@ animate();
 RESIZE
 ========================================================= */
 
-window.addEventListener('resize',()=>{
+window.addEventListener(
+"resize",
+()=>{
 
 camera.aspect =
-window.innerWidth/window.innerHeight;
+window.innerWidth/
+window.innerHeight;
 
 camera.updateProjectionMatrix();
 
@@ -965,7 +1220,8 @@ window.innerWidth,
 window.innerHeight
 );
 
-});
+}
+);
 
 </script>
 
