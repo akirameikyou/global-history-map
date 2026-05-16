@@ -1,684 +1,275 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>GLOBAL HISTORY MAP</title>
-
-<script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
+<!-- three.js / globe.gl -->
+<script src="https://unpkg.com/three"></script>
 <script src="https://unpkg.com/globe.gl"></script>
-
-<style>
-
-html,body{
-  margin:0;
-  overflow:hidden;
-  background:#000;
-  font-family:"Helvetica Neue",sans-serif;
-  color:#fff;
-}
-
-/* 星空 */
-#stars{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  background:
-    radial-gradient(circle at 20% 30%, rgba(255,255,255,.8) 1px, transparent 1px),
-    radial-gradient(circle at 70% 60%, rgba(255,255,255,.5) 1px, transparent 1px),
-    radial-gradient(circle at 40% 80%, rgba(255,255,255,.4) 1px, transparent 1px),
-    #000;
-  background-size:240px 240px;
-  opacity:.6;
-}
-
-#globeViz{
-  position:absolute;
-  inset:0;
-  z-index:1;
-}
-
-/* タイトル */
-.main-title{
-  position:absolute;
-  top:14px;
-  width:100%;
-  text-align:center;
-  z-index:20;
-  pointer-events:none;
-}
-
-.main-title h1{
-  margin:0;
-  font-size:38px;
-  letter-spacing:4px;
-  font-weight:800;
-  opacity:.9;
-  text-shadow:
-    0 0 10px rgba(255,255,255,.22),
-    0 0 24px rgba(255,255,255,.1);
-}
-
-.main-title p{
-  margin-top:8px;
-  font-size:11px;
-  letter-spacing:8px;
-  color:#46dfff;
-  opacity:.85;
-}
-
-/* 左パネル */
-.left-panel{
-  position:absolute;
-  top:92px;
-  left:28px;
-  width:300px;
-  height:72vh;
-  z-index:20;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(0,0,0,.28);
-  backdrop-filter:blur(4px);
-  padding:22px;
-  overflow-y:auto;
-}
-
-.left-panel h2{
-  margin:0 0 26px;
-  font-size:15px;
-  letter-spacing:4px;
-}
-
-.event{
-  padding-left:16px;
-  margin-bottom:34px;
-  cursor:pointer;
-  transition:.25s;
-}
-
-.event:hover{
-  transform:translateX(4px);
-}
-
-.event-year{
-  font-size:16px;
-  letter-spacing:4px;
-  margin-bottom:10px;
-}
-
-.event-text{
-  font-size:15px;
-  line-height:1.9;
-  color:rgba(255,255,255,.92);
-}
-
-/* 色連動 */
-
-.event.red{
-  border-left:3px solid #ff6464;
-}
-.event.red .event-year{
-  color:#ff6464;
-}
-
-.event.cyan{
-  border-left:3px solid #46dfff;
-}
-.event.cyan .event-year{
-  color:#46dfff;
-}
-
-.event.gold{
-  border-left:3px solid #ffd95a;
-}
-.event.gold .event-year{
-  color:#ffd95a;
-}
-
-.event.white{
-  border-left:3px solid #ffffff;
-}
-.event.white .event-year{
-  color:#ffffff;
-}
-
-/* 右パネル */
-
-.right-panel{
-  position:absolute;
-  top:92px;
-  right:28px;
-  width:330px;
-  height:72vh;
-  z-index:20;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(0,0,0,.28);
-  backdrop-filter:blur(4px);
-  padding:22px;
-  overflow-y:auto;
-}
-
-.person-select{
-  width:100%;
-  height:56px;
-  background:#000;
-  color:#fff;
-  border:1px solid rgba(255,255,255,.15);
-  font-size:15px;
-  padding-left:16px;
-  margin-bottom:28px;
-}
-
-.person-image{
-  width:180px;
-  height:180px;
-  object-fit:cover;
-  border-radius:22px;
-  display:block;
-  margin:auto;
-  box-shadow:0 0 20px rgba(70,223,255,.22);
-}
-
-.person-name{
-  margin-top:34px;
-  font-size:54px;
-  line-height:.95;
-  font-weight:800;
-}
-
-.person-years{
-  margin-top:20px;
-  font-size:15px;
-  letter-spacing:7px;
-  color:#46dfff;
-}
-
-.person-text{
-  margin-top:34px;
-  font-size:15px;
-  line-height:2;
-  color:rgba(255,255,255,.88);
-}
-
-/* タイムライン */
-
-.timeline{
-  position:absolute;
-  bottom:32px;
-  left:360px;
-  right:360px;
-  z-index:30;
-}
-
-.timeline-line{
-  height:2px;
-  background:rgba(255,255,255,.18);
-  position:relative;
-}
-
-/* 年代 */
-
-.timeline-years{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:12px;
-  font-size:13px;
-  color:rgba(255,255,255,.65);
-  letter-spacing:2px;
-}
-
-/* ポイント */
-
-.timeline-points{
-  position:absolute;
-  width:100%;
-  top:-7px;
-}
-
-.point{
-  position:absolute;
-  width:12px;
-  height:12px;
-  border-radius:50%;
-  cursor:pointer;
-  transition:.25s;
-}
-
-.point:hover{
-  transform:scale(1.25);
-}
-
-.point.active{
-  width:16px;
-  height:16px;
-  margin-left:-2px;
-  margin-top:-2px;
-  box-shadow:0 0 16px currentColor;
-}
-
-/* 色 */
-
-.point.red{
-  background:#ff6464;
-  color:#ff6464;
-}
-
-.point.cyan{
-  background:#46dfff;
-  color:#46dfff;
-}
-
-.point.gold{
-  background:#ffd95a;
-  color:#ffd95a;
-}
-
-.point.white{
-  background:#ffffff;
-  color:#ffffff;
-}
-
-/* ラベル */
-
-.timeline-label{
-  position:absolute;
-  top:20px;
-  transform:translateX(-50%);
-  font-size:12px;
-  color:rgba(255,255,255,.72);
-  white-space:nowrap;
-}
-
-/* 情報カード */
-
-.info-card{
-  position:absolute;
-  left:50%;
-  bottom:110px;
-  transform:translateX(-50%);
-  width:430px;
-  z-index:40;
-  background:rgba(0,0,0,.48);
-  border:1px solid rgba(70,223,255,.35);
-  padding:28px;
-  display:none;
-  backdrop-filter:blur(8px);
-}
-
-.info-card.active{
-  display:block;
-}
-
-.info-card h3{
-  margin:0 0 18px;
-  color:#46dfff;
-  font-size:24px;
-  line-height:1.3;
-}
-
-.info-card p{
-  font-size:15px;
-  line-height:2;
-  color:rgba(255,255,255,.92);
-}
-
-.close-btn{
-  margin-top:24px;
-  width:92px;
-  height:40px;
-  border:none;
-  background:#46dfff;
-  color:#000;
-  font-weight:700;
-  cursor:pointer;
-}
-
-/* 都市の呼吸光 */
-
-.city-glow{
-  position:absolute;
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:#46dfff;
-  box-shadow:
-    0 0 8px #46dfff,
-    0 0 18px #46dfff;
-  animation:pulse 2.4s infinite;
-}
-
-@keyframes pulse{
-  0%{
-    transform:scale(1);
-    opacity:.5;
-  }
-  50%{
-    transform:scale(1.8);
-    opacity:1;
-  }
-  100%{
-    transform:scale(1);
-    opacity:.5;
-  }
-}
-
-/* スクロールバー */
-
-::-webkit-scrollbar{
-  width:6px;
-}
-
-::-webkit-scrollbar-thumb{
-  background:rgba(255,255,255,.2);
-}
-
-</style>
-</head>
-
-<body>
-
-<div id="stars"></div>
-<div id="globeViz"></div>
-
-<div class="main-title">
-  <h1>GLOBAL HISTORY MAP</h1>
-  <p>JOHN MANJIRO</p>
-</div>
-
-<!-- 左 -->
-
-<div class="left-panel">
-
-<h2>WORLD EVENTS</h2>
-
-<div class="event red" onclick="showEvent(0)">
-  <div class="event-year">1839</div>
-  <div class="event-text">
-    The First Opium War begins between Britain and Qing China.
-  </div>
-</div>
-
-<div class="event cyan" onclick="showEvent(1)">
-  <div class="event-year">1841</div>
-  <div class="event-text">
-    John Manjiro is shipwrecked and arrives at Torishima.
-  </div>
-</div>
-
-<div class="event gold" onclick="showEvent(2)">
-  <div class="event-year">1848</div>
-  <div class="event-text">
-    California Gold Rush accelerates Pacific migration and trade.
-  </div>
-</div>
-
-<div class="event white" onclick="showEvent(3)">
-  <div class="event-year">1853</div>
-  <div class="event-text">
-    Commodore Perry arrives in Japan with the Black Ships.
-  </div>
-</div>
-
-<div class="event cyan" onclick="showEvent(4)">
-  <div class="event-year">1868</div>
-  <div class="event-text">
-    The Meiji Restoration transforms Japan into a modern nation.
-  </div>
-</div>
-
-</div>
-
-<!-- 右 -->
-
-<div class="right-panel">
-
-<select class="person-select">
-  <option>JOHN MANJIRO</option>
-</select>
-
-<img
-class="person-image"
-src="https://upload.wikimedia.org/wikipedia/commons/0/07/Nakahama_Manjiro.jpg"
-/>
-
-<div class="person-name">
-  JOHN<br>MANJIRO
-</div>
-
-<div class="person-years">
-  1827 — 1898
-</div>
-
-<div class="person-text">
-  Nakahama Manjiro connected Japan and America during the dawn of globalization.
-  After being shipwrecked as a teenager, he crossed the Pacific,
-  studied navigation and western science, and later contributed to Japan’s opening to the world.
-</div>
-
-</div>
-
-<!-- タイムライン -->
-
-<div class="timeline">
-
-<div class="timeline-years">
-  <span>1600</span>
-  <span>1700</span>
-  <span>1800</span>
-  <span>1900</span>
-  <span>2000</span>
-</div>
-
-<div class="timeline-line">
-
-<div class="timeline-points">
-
-<div class="point red active"
-style="left:18%;"
-onclick="showEvent(0)">
-</div>
-
-<div class="timeline-label" style="left:18%;">
-1839
-</div>
-
-<div class="point cyan"
-style="left:34%;"
-onclick="showEvent(1)">
-</div>
-
-<div class="timeline-label" style="left:34%;">
-Torishima
-</div>
-
-<div class="point gold"
-style="left:52%;"
-onclick="showEvent(2)">
-</div>
-
-<div class="timeline-label" style="left:52%;">
-America
-</div>
-
-<div class="point white"
-style="left:72%;"
-onclick="showEvent(3)">
-</div>
-
-<div class="timeline-label" style="left:72%;">
-1853
-</div>
-
-<div class="point cyan"
-style="left:88%;"
-onclick="showEvent(4)">
-</div>
-
-<div class="timeline-label" style="left:88%;">
-Return
-</div>
-
-</div>
-</div>
-</div>
-
-<!-- カード -->
-
-<div class="info-card active" id="infoCard">
-
-<h3 id="cardTitle">
-1839 — First Opium War
-</h3>
-
-<p id="cardText">
-Britain and Qing China entered into conflict over trade and imperial influence in East Asia.
-</p>
-
-<button class="close-btn" onclick="closeCard()">
-CLOSE
-</button>
-
-</div>
 
 <script>
 
-const world = Globe()
-(document.getElementById('globeViz'))
-
-.globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
-.bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
-.backgroundColor('rgba(0,0,0,0)')
-
-.arcsData([
-{
-startLat:33,
-startLng:139,
-endLat:37.7,
-endLng:-122.4,
-color:['#46dfff','#46dfff']
-},
-{
-startLat:24.6,
-startLng:141.3,
-endLat:33,
-endLng:139,
-color:['#ffd95a','#46dfff']
-}
-])
-
-.arcStroke(.8)
-.arcDashLength(.35)
-.arcDashGap(1.2)
-.arcDashAnimateTime(3500)
-
-.pointsData([
-{
-lat:35.6,
-lng:139.6,
-size:.18,
-color:'#46dfff'
-},
-{
-lat:24.6,
-lng:141.3,
-size:.2,
-color:'#ffd95a'
-},
-{
-lat:37.7,
-lng:-122.4,
-size:.22,
-color:'#ff6464'
-}
-])
-
-.pointAltitude(.02)
-.pointColor('color')
-.pointRadius('size');
-
-world.controls().autoRotate = true;
-world.controls().autoRotateSpeed = .45;
-
-world.pointOfView({
-  lat:35,
-  lng:140,
-  altitude:1.8
-});
+/* =========================
+   EVENTS
+========================= */
 
 const events = [
 
 {
-title:'1839 — First Opium War',
-text:'Britain and Qing China entered into conflict over trade and imperial influence in East Asia.',
-lat:30,
-lng:120
+  year:1839,
+  title:"1839 — First Opium War",
+  text:"Britain and Qing China entered into conflict over trade and imperial influence in East Asia.",
+  lat:31,
+  lng:121
 },
 
 {
-title:'1841 — Torishima',
-text:'John Manjiro survives shipwreck and reaches Torishima, beginning his global journey.',
-lat:24.6,
-lng:141.3
+  year:1841,
+  title:"1841 — Torishima",
+  text:"John Manjiro was shipwrecked and drifted to Torishima.",
+  lat:30.48,
+  lng:140.30
 },
 
 {
-title:'1848 — California Gold Rush',
-text:'Pacific migration and trade accelerate across America and Asia.',
-lat:37.7,
-lng:-122.4
+  year:1843,
+  title:"1843 — Hawaii",
+  text:"Manjiro crossed the Pacific and experienced international culture.",
+  lat:21.30,
+  lng:-157.85
 },
 
 {
-title:'1853 — Perry Arrives',
-text:'The Black Ships pressured Japan to open to international relations.',
-lat:35,
-lng:139
+  year:1848,
+  title:"1848 — California Gold Rush",
+  text:"Pacific migration accelerated between America and Asia.",
+  lat:37.77,
+  lng:-122.41
 },
 
 {
-title:'1868 — Meiji Restoration',
-text:'Japan rapidly modernized and entered the industrial global age.',
-lat:35,
-lng:138
+  year:1853,
+  title:"1853 — Perry Arrives",
+  text:"The Black Ships pressured Japan to open internationally.",
+  lat:35.68,
+  lng:139.69
+},
+
+{
+  year:1868,
+  title:"1868 — Meiji Restoration",
+  text:"Japan entered rapid modernization.",
+  lat:35.68,
+  lng:139.69
 }
 
 ];
+
+/* =========================
+   GLOBE
+========================= */
+
+const world = Globe()
+(document.getElementById('globeViz'))
+
+.globeImageUrl(
+'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg'
+)
+
+.bumpImageUrl(
+'https://unpkg.com/three-globe/example/img/earth-topology.png'
+)
+
+.backgroundColor('rgba(0,0,0,0)')
+
+.atmosphereColor('#46dfff')
+
+.atmosphereAltitude(0.14);
+
+/* =========================
+   初期視点
+========================= */
+
+world.pointOfView({
+  lat:30,
+  lng:140,
+  altitude:2.1
+});
+
+/* =========================
+   自動回転
+========================= */
+
+world.controls().autoRotate = true;
+world.controls().autoRotateSpeed = 0.45;
+
+/* =========================
+   都市光
+========================= */
+
+world
+.pointsData([
+
+{
+  lat:35.68,
+  lng:139.69,
+  size:.18,
+  color:"#46dfff"
+},
+
+{
+  lat:30.48,
+  lng:140.30,
+  size:.14,
+  color:"#ffffff"
+},
+
+{
+  lat:21.30,
+  lng:-157.85,
+  size:.18,
+  color:"#46dfff"
+},
+
+{
+  lat:37.77,
+  lng:-122.41,
+  size:.22,
+  color:"#ffd95e"
+},
+
+{
+  lat:31,
+  lng:121,
+  size:.15,
+  color:"#ff6464"
+}
+
+])
+
+.pointAltitude(.01)
+
+.pointRadius('size')
+
+.pointColor('color');
+
+/* =========================
+   航路ライン
+========================= */
+
+world.arcsData([
+
+{
+  startLat:30.48,
+  startLng:140.30,
+  endLat:21.30,
+  endLng:-157.85,
+  color:["#46dfff","#46dfff"]
+},
+
+{
+  startLat:21.30,
+  startLng:-157.85,
+  endLat:37.77,
+  endLng:-122.41,
+  color:["#ffd95e","#46dfff"]
+},
+
+{
+  startLat:37.77,
+  startLng:-122.41,
+  endLat:35.68,
+  endLng:139.69,
+  color:["#ffffff","#46dfff"]
+}
+
+])
+
+.arcStroke(.7)
+
+.arcDashLength(.35)
+
+.arcDashGap(.9)
+
+.arcDashAnimateTime(3500);
+
+/* =========================
+   POPUP
+========================= */
+
+let popupOpen = false;
 
 function showEvent(index){
 
   const e = events[index];
 
-  document.getElementById('cardTitle').innerText = e.title;
-  document.getElementById('cardText').innerText = e.text;
+  document.getElementById('cardTitle')
+  .innerHTML = e.title;
 
-  document.getElementById('infoCard').classList.add('active');
+  document.getElementById('cardText')
+  .innerHTML = e.text;
 
-  world.pointOfView({
-    lat:e.lat,
-    lng:e.lng,
-    altitude:1.4
-  },1200);
+  document.getElementById('infoCard')
+  .classList.add('active');
+
+  popupOpen = true;
 
   world.controls().autoRotate = false;
 
-  document.querySelectorAll('.point').forEach(p=>{
-    p.classList.remove('active');
-  });
+  world.pointOfView({
 
-  document.querySelectorAll('.point')[index]
-  .classList.add('active');
+    lat:e.lat,
+    lng:e.lng,
+    altitude:1.5
+
+  },1400);
 
 }
+
+/* =========================
+   CLOSE
+========================= */
 
 function closeCard(){
 
   document.getElementById('infoCard')
   .classList.remove('active');
 
+  popupOpen = false;
+
   world.controls().autoRotate = true;
 
 }
 
-</script>
+/* =========================
+   TIMELINE
+========================= */
 
-</body>
-</html>
+const startYear = 1600;
+const endYear = 2000;
+
+document.querySelectorAll('.timeline-point')
+.forEach((el,index)=>{
+
+  const year = events[index].year;
+
+  const pos =
+    ((year - startYear) /
+    (endYear - startYear)) * 100;
+
+  el.style.left = pos + '%';
+
+});
+
+/* =========================
+   ACTIVE POINT
+========================= */
+
+function activatePoint(index){
+
+  document
+  .querySelectorAll('.timeline-point')
+  .forEach(p=>p.classList.remove('active'));
+
+  document
+  .querySelectorAll('.timeline-point')[index]
+  .classList.add('active');
+
+}
+
+</script>
