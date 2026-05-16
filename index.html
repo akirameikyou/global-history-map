@@ -1,68 +1,378 @@
-<!-- three.js / globe.gl -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GLOBAL HISTORY MAP</title>
+
 <script src="https://unpkg.com/three"></script>
 <script src="https://unpkg.com/globe.gl"></script>
 
-<script>
+<style>
 
-/* =========================
-   EVENTS
-========================= */
-
-const events = [
-
-{
-  year:1839,
-  title:"1839 — First Opium War",
-  text:"Britain and Qing China entered into conflict over trade and imperial influence in East Asia.",
-  lat:31,
-  lng:121
-},
-
-{
-  year:1841,
-  title:"1841 — Torishima",
-  text:"John Manjiro was shipwrecked and drifted to Torishima.",
-  lat:30.48,
-  lng:140.30
-},
-
-{
-  year:1843,
-  title:"1843 — Hawaii",
-  text:"Manjiro crossed the Pacific and experienced international culture.",
-  lat:21.30,
-  lng:-157.85
-},
-
-{
-  year:1848,
-  title:"1848 — California Gold Rush",
-  text:"Pacific migration accelerated between America and Asia.",
-  lat:37.77,
-  lng:-122.41
-},
-
-{
-  year:1853,
-  title:"1853 — Perry Arrives",
-  text:"The Black Ships pressured Japan to open internationally.",
-  lat:35.68,
-  lng:139.69
-},
-
-{
-  year:1868,
-  title:"1868 — Meiji Restoration",
-  text:"Japan entered rapid modernization.",
-  lat:35.68,
-  lng:139.69
+html,body{
+  margin:0;
+  overflow:hidden;
+  background:#000;
+  font-family:sans-serif;
+  color:white;
 }
 
-];
+#globeViz{
+  position:absolute;
+  inset:0;
+}
 
-/* =========================
-   GLOBE
-========================= */
+/* タイトル */
+
+.title{
+  position:absolute;
+  top:18px;
+  width:100%;
+  text-align:center;
+  z-index:10;
+}
+
+.title h1{
+  margin:0;
+  font-size:38px;
+  letter-spacing:4px;
+}
+
+.title p{
+  margin-top:8px;
+  color:#46dfff;
+  letter-spacing:6px;
+  font-size:12px;
+}
+
+/* 右人物 */
+
+.right{
+  position:absolute;
+  right:24px;
+  top:90px;
+
+  width:320px;
+
+  background:rgba(0,0,0,.32);
+
+  border:1px solid rgba(255,255,255,.08);
+
+  backdrop-filter:blur(6px);
+
+  padding:22px;
+
+  z-index:10;
+}
+
+.person-image{
+  width:180px;
+  height:180px;
+
+  object-fit:cover;
+
+  border-radius:22px;
+
+  display:block;
+
+  margin:auto;
+}
+
+.person-name{
+  margin-top:28px;
+
+  font-size:48px;
+
+  line-height:.95;
+
+  font-weight:800;
+}
+
+.person-years{
+  margin-top:18px;
+
+  color:#46dfff;
+
+  letter-spacing:5px;
+}
+
+.person-text{
+  margin-top:24px;
+
+  line-height:1.9;
+
+  color:rgba(255,255,255,.88);
+}
+
+/* 左イベント */
+
+.left{
+  position:absolute;
+
+  left:24px;
+  top:90px;
+
+  width:300px;
+
+  background:rgba(0,0,0,.32);
+
+  border:1px solid rgba(255,255,255,.08);
+
+  backdrop-filter:blur(6px);
+
+  padding:22px;
+
+  z-index:10;
+}
+
+.event{
+  margin-bottom:30px;
+
+  padding-left:14px;
+
+  border-left:3px solid #46dfff;
+
+  cursor:pointer;
+}
+
+.event-year{
+  color:#46dfff;
+
+  letter-spacing:4px;
+
+  margin-bottom:8px;
+}
+
+.event-text{
+  line-height:1.8;
+}
+
+/* 年代バー */
+
+.timeline{
+  position:absolute;
+
+  left:340px;
+  right:340px;
+  bottom:32px;
+
+  z-index:10;
+}
+
+.timeline-years{
+  display:flex;
+  justify-content:space-between;
+
+  color:rgba(255,255,255,.6);
+
+  margin-bottom:12px;
+}
+
+.timeline-line{
+  height:2px;
+
+  background:rgba(255,255,255,.2);
+
+  position:relative;
+}
+
+.timeline-point{
+  position:absolute;
+
+  width:12px;
+  height:12px;
+
+  border-radius:50%;
+
+  top:-5px;
+
+  cursor:pointer;
+}
+
+.timeline-point.active{
+  box-shadow:0 0 16px currentColor;
+}
+
+.red{
+  background:#ff6464;
+}
+
+.cyan{
+  background:#46dfff;
+}
+
+.gold{
+  background:#ffd95a;
+}
+
+.white{
+  background:#ffffff;
+}
+
+/* ポップアップ */
+
+.popup{
+  position:absolute;
+
+  left:50%;
+  bottom:110px;
+
+  transform:translateX(-50%);
+
+  width:420px;
+
+  background:rgba(0,0,0,.48);
+
+  backdrop-filter:blur(8px);
+
+  border:1px solid rgba(70,223,255,.25);
+
+  padding:24px;
+
+  z-index:20;
+
+  display:none;
+}
+
+.popup.active{
+  display:block;
+}
+
+.popup h3{
+  color:#46dfff;
+}
+
+.close-btn{
+  margin-top:18px;
+
+  width:90px;
+  height:38px;
+
+  border:none;
+
+  background:#46dfff;
+
+  font-weight:bold;
+
+  cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="globeViz"></div>
+
+<div class="title">
+<h1>GLOBAL HISTORY MAP</h1>
+<p>JOHN MANJIRO</p>
+</div>
+
+<!-- 左 -->
+
+<div class="left">
+
+<div class="event" onclick="showEvent(0)">
+<div class="event-year">1841</div>
+<div class="event-text">
+John Manjiro drifts to Torishima.
+</div>
+</div>
+
+<div class="event" onclick="showEvent(1)">
+<div class="event-year">1843</div>
+<div class="event-text">
+Manjiro crosses the Pacific to Hawaii.
+</div>
+</div>
+
+<div class="event" onclick="showEvent(2)">
+<div class="event-year">1853</div>
+<div class="event-text">
+Perry arrives in Japan.
+</div>
+</div>
+
+</div>
+
+<!-- 右 -->
+
+<div class="right">
+
+<img
+class="person-image"
+src="john-manjiro-portrait.png"
+/>
+
+<div class="person-name">
+JOHN<br>
+MANJIRO
+</div>
+
+<div class="person-years">
+1827 — 1898
+</div>
+
+<div class="person-text">
+John Manjiro connected Japan and America during the dawn of globalization.
+</div>
+
+</div>
+
+<!-- タイムライン -->
+
+<div class="timeline">
+
+<div class="timeline-years">
+<span>1600</span>
+<span>1700</span>
+<span>1800</span>
+<span>1900</span>
+<span>2000</span>
+</div>
+
+<div class="timeline-line">
+
+<div class="timeline-point cyan active"
+style="left:60%"
+onclick="showEvent(0)">
+</div>
+
+<div class="timeline-point gold"
+style="left:63%"
+onclick="showEvent(1)">
+</div>
+
+<div class="timeline-point white"
+style="left:66%"
+onclick="showEvent(2)">
+</div>
+
+</div>
+</div>
+
+<!-- popup -->
+
+<div class="popup active" id="popup">
+
+<h3 id="popupTitle">
+1841 — Torishima
+</h3>
+
+<p id="popupText">
+John Manjiro drifts to Torishima.
+</p>
+
+<button class="close-btn" onclick="closePopup()">
+CLOSE
+</button>
+
+</div>
+
+<script>
 
 const world = Globe()
 (document.getElementById('globeViz'))
@@ -79,65 +389,31 @@ const world = Globe()
 
 .atmosphereColor('#46dfff')
 
-.atmosphereAltitude(0.14);
+.atmosphereAltitude(.14);
 
-/* =========================
-   初期視点
-========================= */
+/* 都市光 */
 
-world.pointOfView({
-  lat:30,
-  lng:140,
-  altitude:2.1
-});
-
-/* =========================
-   自動回転
-========================= */
-
-world.controls().autoRotate = true;
-world.controls().autoRotateSpeed = 0.45;
-
-/* =========================
-   都市光
-========================= */
-
-world
-.pointsData([
+world.pointsData([
 
 {
-  lat:35.68,
-  lng:139.69,
-  size:.18,
-  color:"#46dfff"
+lat:30.48,
+lng:140.30,
+size:.14,
+color:'#46dfff'
 },
 
 {
-  lat:30.48,
-  lng:140.30,
-  size:.14,
-  color:"#ffffff"
+lat:21.30,
+lng:-157.85,
+size:.18,
+color:'#ffd95a'
 },
 
 {
-  lat:21.30,
-  lng:-157.85,
-  size:.18,
-  color:"#46dfff"
-},
-
-{
-  lat:37.77,
-  lng:-122.41,
-  size:.22,
-  color:"#ffd95e"
-},
-
-{
-  lat:31,
-  lng:121,
-  size:.15,
-  color:"#ff6464"
+lat:35.68,
+lng:139.69,
+size:.18,
+color:'#ffffff'
 }
 
 ])
@@ -148,128 +424,112 @@ world
 
 .pointColor('color');
 
-/* =========================
-   航路ライン
-========================= */
+/* 航路 */
 
 world.arcsData([
 
 {
-  startLat:30.48,
-  startLng:140.30,
-  endLat:21.30,
-  endLng:-157.85,
-  color:["#46dfff","#46dfff"]
+startLat:30.48,
+startLng:140.30,
+endLat:21.30,
+endLng:-157.85,
+color:['#46dfff','#46dfff']
 },
 
 {
-  startLat:21.30,
-  startLng:-157.85,
-  endLat:37.77,
-  endLng:-122.41,
-  color:["#ffd95e","#46dfff"]
-},
-
-{
-  startLat:37.77,
-  startLng:-122.41,
-  endLat:35.68,
-  endLng:139.69,
-  color:["#ffffff","#46dfff"]
+startLat:21.30,
+startLng:-157.85,
+endLat:35.68,
+endLng:139.69,
+color:['#ffd95a','#ffffff']
 }
 
 ])
 
-.arcStroke(.7)
+.arcStroke(.8)
 
 .arcDashLength(.35)
 
-.arcDashGap(.9)
+.arcDashGap(.8)
 
 .arcDashAnimateTime(3500);
 
-/* =========================
-   POPUP
-========================= */
+world.pointOfView({
+lat:28,
+lng:150,
+altitude:2.1
+});
 
-let popupOpen = false;
+world.controls().autoRotate = true;
+
+world.controls().autoRotateSpeed = .45;
+
+const events = [
+
+{
+title:'1841 — Torishima',
+text:'John Manjiro drifts to Torishima.',
+lat:30.48,
+lng:140.30
+},
+
+{
+title:'1843 — Hawaii',
+text:'Manjiro crosses the Pacific to Hawaii.',
+lat:21.30,
+lng:-157.85
+},
+
+{
+title:'1853 — Perry Arrives',
+text:'Perry arrives in Japan.',
+lat:35.68,
+lng:139.69
+}
+
+];
 
 function showEvent(index){
 
-  const e = events[index];
+const e = events[index];
 
-  document.getElementById('cardTitle')
-  .innerHTML = e.title;
+document.getElementById('popupTitle')
+.innerHTML = e.title;
 
-  document.getElementById('cardText')
-  .innerHTML = e.text;
+document.getElementById('popupText')
+.innerHTML = e.text;
 
-  document.getElementById('infoCard')
-  .classList.add('active');
+document.getElementById('popup')
+.classList.add('active');
 
-  popupOpen = true;
+world.controls().autoRotate = false;
 
-  world.controls().autoRotate = false;
+world.pointOfView({
 
-  world.pointOfView({
+lat:e.lat,
+lng:e.lng,
+altitude:1.4
 
-    lat:e.lat,
-    lng:e.lng,
-    altitude:1.5
-
-  },1400);
-
-}
-
-/* =========================
-   CLOSE
-========================= */
-
-function closeCard(){
-
-  document.getElementById('infoCard')
-  .classList.remove('active');
-
-  popupOpen = false;
-
-  world.controls().autoRotate = true;
-
-}
-
-/* =========================
-   TIMELINE
-========================= */
-
-const startYear = 1600;
-const endYear = 2000;
+},1200);
 
 document.querySelectorAll('.timeline-point')
-.forEach((el,index)=>{
+.forEach(p=>p.classList.remove('active'));
 
-  const year = events[index].year;
+document.querySelectorAll('.timeline-point')[index]
+.classList.add('active');
 
-  const pos =
-    ((year - startYear) /
-    (endYear - startYear)) * 100;
+}
 
-  el.style.left = pos + '%';
+function closePopup(){
 
-});
+document.getElementById('popup')
+.classList.remove('active');
 
-/* =========================
-   ACTIVE POINT
-========================= */
-
-function activatePoint(index){
-
-  document
-  .querySelectorAll('.timeline-point')
-  .forEach(p=>p.classList.remove('active'));
-
-  document
-  .querySelectorAll('.timeline-point')[index]
-  .classList.add('active');
+world.controls().autoRotate = true;
 
 }
 
 </script>
+
+</body>
+</html>
